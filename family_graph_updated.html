@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Family Graph</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Heebo', sans-serif; background-color: #f8fafc; overflow: hidden; margin: 0; padding: 0; }
+        svg { width: 100vw; height: 100vh; cursor: grab; display: block; }
+        svg:active { cursor: grabbing; }
+
+        .link { fill: none; stroke: #cbd5e1; stroke-width: 2px; transition: all 0.3s ease; }
+        .link:hover { stroke: #94a3b8; stroke-width: 3px; }
+        .link-spouse { stroke: #f472b6; stroke-dasharray: 6,4; }
+        .link-parent { stroke: #cbd5e1; }
+
+        /* Highlight classes */
+        .link-dimmed { opacity: 0.15 !important; }
+        .link-highlight { stroke: #6366f1 !important; stroke-width: 4px !important; opacity: 1 !important; z-index: 10; }
+        .node-dimmed { opacity: 0.4 !important; transition: opacity 0.3s; }
+
+        .node-card { transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); cursor: pointer; }
+        .node-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #6366f1; }
+        .node-card:active { cursor: grabbing; }
+
+        /* Modal Styles */
+        .modal-enter { opacity: 0; transform: scale(0.95) translateY(10px); transition: all 0.3s ease; }
+        .modal-enter-active { opacity: 1; transform: scale(1) translateY(0); }
+        .backdrop-enter { opacity: 0; transition: opacity 0.3s ease; }
+        .backdrop-enter-active { opacity: 1; }
+        
+        /* Custom Scrollbar for Textareas */
+        textarea::-webkit-scrollbar { width: 8px; }
+        textarea::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.pointer-events-auto{pointer-events:auto}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.left-1\/2{left:50%}.left-6{left:1.5rem}.right-6{right:1.5rem}.top-1\/2{top:50%}.top-6{top:1.5rem}.bottom-0{bottom:0px}.left-0{left:0px}.left-2\.5{left:0.625rem}.left-\[26px\]{left:26px}.right-0{right:0px}.top-0{top:0px}.top-2\.5{top:0.625rem}.top-\[16px\]{top:16px}.top-\[96px\]{top:96px}.z-0{z-index:0}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.-z-10{z-index:-10}.z-20{z-index:20}.col-span-2{grid-column:span 2 / span 2}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-2{margin-top:0.5rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.ml-2{margin-left:0.5rem}.ml-3{margin-left:0.75rem}.mr-2{margin-right:0.5rem}.mt-0\.5{margin-top:0.125rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-12{height:3rem}.h-24{height:6rem}.h-28{height:7rem}.h-3{height:0.75rem}.h-3\.5{height:0.875rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-8{height:2rem}.h-full{height:100%}.h-\[18px\]{height:18px}.max-h-\[90vh\]{max-height:90vh}.max-h-\[95vh\]{max-height:95vh}.w-1\/3{width:33.333333%}.w-12{width:3rem}.w-24{width:6rem}.w-28{width:7rem}.w-3{width:0.75rem}.w-3\.5{width:0.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-8{width:2rem}.w-full{width:100%}.w-px{width:1px}.w-1\.5{width:0.375rem}.w-\[18px\]{width:18px}.w-max{width:max-content}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.overflow-hidden{overflow:hidden}.overflow-visible{overflow:visible}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.rounded-b-2xl{border-bottom-right-radius:1rem;border-bottom-left-radius:1rem}.rounded-t-2xl{border-top-left-radius:1rem;border-top-right-radius:1rem}.rounded-r-xl{border-top-right-radius:0.75rem;border-bottom-right-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-emerald-100{--tw-border-opacity:1;border-color:rgb(209 250 229 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-blue-200{--tw-border-opacity:1;border-color:rgb(191 219 254 / var(--tw-border-opacity, 1))}.border-emerald-500{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.border-indigo-500{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.border-rose-200{--tw-border-opacity:1;border-color:rgb(254 205 211 / var(--tw-border-opacity, 1))}.border-indigo-400{--tw-border-opacity:1;border-color:rgb(129 140 248 / var(--tw-border-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900\/40{background-color:rgb(15 23 42 / 0.4)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-blue-400{--tw-bg-opacity:1;background-color:rgb(96 165 250 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-rose-400{--tw-bg-opacity:1;background-color:rgb(251 113 133 / var(--tw-bg-opacity, 1))}.bg-rose-50{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.bg-slate-400{--tw-bg-opacity:1;background-color:rgb(148 163 184 / var(--tw-bg-opacity, 1))}.object-cover{object-fit:cover}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-1{padding:0.25rem}.p-3{padding:0.75rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.pb-2{padding-bottom:0.5rem}.pt-5{padding-top:1.25rem}.pl-7{padding-left:1.75rem}.text-center{text-align:center}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-indigo-400{--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-indigo-900{--tw-text-opacity:1;color:rgb(49 46 129 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-rose-500{--tw-text-opacity:1;color:rgb(244 63 94 / var(--tw-text-opacity, 1))}.text-rose-900{--tw-text-opacity:1;color:rgb(136 19 55 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-80{opacity:0.8}.opacity-40{opacity:0.4}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-indigo-100{--tw-shadow-color:#e0e7ff;--tw-shadow:var(--tw-shadow-colored)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-indigo-400{--tw-ring-opacity:1;--tw-ring-color:rgb(129 140 248 / var(--tw-ring-opacity, 1))}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-110:hover{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-emerald-600:hover{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-100:hover{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-50:hover{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-red-100:hover{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-50:hover{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.hover\:text-indigo-600:hover{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-indigo-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(99 102 241 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:col-span-1{grid-column:span 1 / span 1}.sm\:col-span-2{grid-column:span 2 / span 2}}</style></head>
+<body class="text-slate-800 antialiased">
+
+    <!-- Error Screen -->
+    <div id="error-screen" style="display: none; padding: 40px; color: red; text-align: center; direction: ltr; position: relative; z-index: 999;">
+        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">🚨 JavaScript Error Detected</h1>
+        <p id="error-message" style="font-family: monospace; background: #fee2e2; padding: 15px; border-radius: 8px;"></p>
+        <p style="margin-top: 20px; color: #333;">Press <strong>F12</strong> to open the browser console for more details.</p>
+    </div>
+
+    <div id="app-container">
+        <!-- SVG Canvas Background (click to reset filters) -->
+        <svg class="absolute inset-0 z-0 pointer-events-none" width="100%" height="100%">
+            <defs>
+                <pattern id="dot-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="#e2e8f0"></circle>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#dot-grid)"></rect>
+        </svg>
+
+        <!-- Top Right Controls -->
+        <div class="absolute top-6 right-6 z-10 flex gap-3">
+            <div class="bg-white/80 backdrop-blur-md p-2 rounded-xl shadow-sm border border-slate-200 flex items-center gap-2">
+                <button onclick="zoomIn()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600" title="התקרב">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-in" aria-hidden="true" class="lucide lucide-zoom-in w-5 h-5"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="11" x2="11" y1="8" y2="14"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
+                </button>
+                <div class="w-px h-6 bg-slate-200"></div>
+                <button onclick="zoomOut()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600" title="התרחק">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-out" aria-hidden="true" class="lucide lucide-zoom-out w-5 h-5"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
+                </button>
+                <div class="w-px h-6 bg-slate-200"></div>
+                <button onclick="resetZoom()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600" title="מרכז תצוגה">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="focus" aria-hidden="true" class="lucide lucide-focus w-5 h-5"><circle cx="12" cy="12" r="3"></circle><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Top Left Controls -->
+        <div class="absolute top-6 left-6 z-10 flex gap-3">
+            <button id="btn-reset-filter" onclick="resetFilter()" class="hidden bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl shadow-md transition-all font-medium flex items-center gap-2 text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="refresh-cw" aria-hidden="true" class="lucide lucide-refresh-cw w-4 h-4"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                הצג הכל
+            </button>
+            <button onclick="exportHTML()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-md transition-all font-medium flex items-center gap-2 text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="download" aria-hidden="true" class="lucide lucide-download w-4 h-4"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg>
+                שמור מודל מעודכן
+            </button>
+        </div>
+
+        <!-- Main SVG Canvas -->
+        <svg id="tree-canvas" class="relative z-0" width="1514" height="687"></svg>
+
+        <!-- Modals Backdrop -->
+        <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden backdrop-enter" onclick="closeModal()"></div>
+
+        <!-- View Details Modal (Read Only) -->
+        <div id="view-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl shrink-0">
+                <div class="flex items-center gap-2">
+                    <button onclick="switchToEdit()" class="text-slate-500 hover:text-indigo-600 bg-white border border-slate-200 shadow-sm p-2 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105" title="עריכת פרטים והגדרות">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="settings" aria-hidden="true" class="lucide lucide-settings w-5 h-5"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <span class="text-xs font-semibold text-slate-400 bg-slate-200 px-2 py-1 rounded-lg">קריאה בלבד</span>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-5 h-5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto">
+                <div class="text-center mb-6">
+                    <div id="view-icon-bg" class="w-28 h-28 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border-4 border-white overflow-hidden relative bg-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user" aria-hidden="true" id="view-icon-fallback" class="lucide lucide-user w-12 h-12 text-white"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <img id="view-profile-pic" class="w-full h-full object-cover hidden absolute inset-0 z-10" src="">
+                    </div>
+                    <h2 id="view-name" class="text-3xl font-bold text-slate-800 mb-1">ישות חדשה</h2>
+                    
+                    <!-- Unified Dates Display -->
+                    <div id="view-dates" class="text-lg font-semibold text-slate-700 mb-2 flex items-center justify-center flex-wrap"></div>
+                    
+                    <div id="view-prev-name-container" class="text-sm text-slate-500 mb-4 hidden">
+                        שם קודם: <span id="view-prev-name">איזנשטט</span>
+                    </div>
+                    
+                    <div class="flex flex-wrap justify-center gap-2 mb-2">
+                        <span id="view-role" class="text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">ילד</span>
+                        
+                        <span id="view-descendants" class="text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full hidden flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users" aria-hidden="true" class="lucide lucide-users w-3.5 h-3.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                            <span id="view-descendants-text"></span>
+                        </span>
+
+                        <span id="view-hebrew-date" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1.5 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" aria-hidden="true" class="lucide lucide-calendar w-3.5 h-3.5"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
+                            <span id="view-hebrew-date-text">כ"ט בתמוז</span>
+                        </span>
+
+                        <span id="view-country" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="map-pin" aria-hidden="true" class="lucide lucide-map-pin w-3 h-3"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span id="view-country-text">ישראל</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="view-story-container" class="hidden mt-6">
+                    <h4 class="text-sm font-bold text-slate-700 mb-2 border-b border-slate-100 pb-2">סיפור חיים</h4>
+                    <p id="view-story" class="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit/Add Actions Modal -->
+        <div id="action-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[95vh]">
+            <div class="flex items-center justify-between p-5 border-b border-slate-100 bg-indigo-50 rounded-t-2xl shrink-0">
+                <h3 class="text-lg font-semibold text-indigo-900 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" class="lucide lucide-edit-3 w-5 h-5 text-indigo-600"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                    עריכת ישות והגדרות
+                </h3>
+                <button onclick="closeModal()" class="text-indigo-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-100 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-5 h-5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto">
+                <input type="hidden" id="edit-node-id" value="1781881656777">
+                
+                <!-- Profile Image Upload Area -->
+                <div class="mb-6 flex justify-center">
+                    <div class="relative w-24 h-24 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center hover:bg-slate-200 transition-colors cursor-pointer group" onclick="document.getElementById('edit-pic-upload').click()" title="לחץ להעלאת תמונה">
+                        <img id="edit-pic-preview" class="absolute inset-0 w-full h-full object-cover rounded-full z-10 hidden" src="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" aria-hidden="true" id="edit-pic-icon" class="lucide lucide-camera w-8 h-8 text-slate-400 group-hover:text-slate-500 z-0"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                        <input type="file" id="edit-pic-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                        <input type="hidden" id="edit-pic-base64" value="">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Column 1 & 2 Full width -->
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">שם מלא</label>
+                        <input type="text" id="edit-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">שם משפחה קודם</label>
+                        <input type="text" id="edit-prev-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל: לפני נישואין">
+                    </div>
+                    
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">תפקיד / תיאור</label>
+                        <input type="text" id="edit-role" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">ארץ לידה</label>
+                        <input type="text" id="edit-country" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                    </div>
+
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">סטטוס חיים</label>
+                        <select id="edit-status" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white" onchange="toggleDeathInputs()">
+                            <option value="true">חי/ה</option>
+                            <option value="false">נפטר/ה</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">נושא צבע / מין</label>
+                        <select id="edit-gender" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white">
+                            <option value="neutral">ניטרלי (אפור)</option>
+                            <option value="male">זכר (כחול)</option>
+                            <option value="female">נקבה (ורוד)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-2 sm:col-span-2 mt-2">
+                        <div class="flex items-center gap-4 text-sm font-medium text-slate-600 border-b border-slate-100 pb-2 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" aria-hidden="true" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg> תאריכים
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת לידה (לועזי)</label>
+                        <input type="text" id="edit-birth" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל: 1980">
+                    </div>
+                     <div class="col-span-2 sm:col-span-1" id="edit-hebrew-birth-wrapper">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">תאריך לידה עברי</label>
+                        <input type="text" id="edit-hebrew-birth" placeholder="למשל: כ''ה בתשרי ה'תש''מ" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 opacity-40 pointer-events-none" id="edit-death-wrapper">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת פטירה (לועזי)</label>
+                        <input type="text" id="edit-death" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל: 2020">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 opacity-40 pointer-events-none" id="edit-hebrew-death-wrapper">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">תאריך פטירה עברי</label>
+                        <input type="text" id="edit-hebrew-death" placeholder="למשל: י' באב" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                    </div>
+
+                    <div class="col-span-2 mt-2">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">סיפור חיים / הערות</label>
+                        <textarea id="edit-story" rows="3" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50"></textarea>
+                    </div>
+                </div>
+                    
+                <!-- Link logic -->
+                <div class="pt-5 mt-5 border-t border-slate-100">
+                    <label class="block text-sm font-medium text-slate-600 mb-2">הוסף קשר לישות קיימת</label>
+                    <div class="flex gap-2">
+                        <select id="add-link-type" class="w-1/3 px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white">
+                            <option value="parent">הורה שלי</option>
+                            <option value="spouse">בן/בת זוג</option>
+                        </select>
+                        <select id="add-link-target" class="flex-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white"><option value="">בחר ישות...</option><option value="1">אברהם כהן</option><option value="10">שרה כהן</option><option value="2">דוד כהן</option><option value="3">נחמה אילון</option><option value="4">יוסף כהן</option><option value="5">שירה לוי</option><option value="6">יוסף אילון</option></select>
+                        <button onclick="addLink()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium whitespace-nowrap transition-colors">
+                            קשר
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex flex-wrap gap-3 justify-between items-center shrink-0">
+                <button onclick="deleteNode()" id="btn-delete" class="px-4 py-2.5 text-red-600 hover:bg-red-100 rounded-xl text-sm font-medium transition-colors">
+                    מחק ישות
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="addChild()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-medium shadow-sm transition-all transform hover:scale-105">
+                        הוסף ילד
+                    </button>
+                    <button onclick="saveNode()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium shadow-sm transition-all transform hover:scale-105">
+                        שמור שינויים
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Block containing Logic and Database -->
+    <script>
+        // ==========================================
+        // GRAPH DATABASE MODEL
+        // ==========================================
+        let familyData = {
+    "nodes": [
+        {
+            "id": "1",
+            "name": "אברהם כהן",
+            "previousLastName": "",
+            "role": "אב המשפחה",
+            "birth": "1930",
+            "hebrewBirthDate": "",
+            "death": "2010",
+            "hebrewDeathDate": "י' באב",
+            "isAlive": false,
+            "gender": "male",
+            "birthCountry": "מרוקו",
+            "lifeStory": "עלה לארץ בשנת 1950. בנה את ביתו בירושלים והיה ממייסדי הקהילה המקומית.",
+            "profilePic": "",
+            "level": 0
+        },
+        {
+            "id": "10",
+            "name": "שרה כהן",
+            "previousLastName": "לוי",
+            "role": "אם המשפחה",
+            "birth": "1932",
+            "hebrewBirthDate": "",
+            "death": "2015",
+            "hebrewDeathDate": "ג' בחשוון",
+            "isAlive": false,
+            "gender": "female",
+            "birthCountry": "מרוקו",
+            "lifeStory": "",
+            "profilePic": "",
+            "level": 0
+        },
+        {
+            "id": "2",
+            "name": "דוד כהן",
+            "previousLastName": "",
+            "role": "בן",
+            "birth": "1955",
+            "hebrewBirthDate": "א' בניסן ה'תשט\"ו",
+            "death": "",
+            "hebrewDeathDate": "",
+            "isAlive": true,
+            "gender": "male",
+            "birthCountry": "ישראל",
+            "lifeStory": "",
+            "profilePic": "",
+            "level": 1
+        },
+        {
+            "id": "3",
+            "name": "נחמה אילון",
+            "previousLastName": "איזנשטט",
+            "role": "",
+            "birth": "1994",
+            "hebrewBirthDate": "כ\"ט בתמוז",
+            "death": "",
+            "hebrewDeathDate": "",
+            "isAlive": true,
+            "gender": "female",
+            "birthCountry": "ישראל",
+            "lifeStory": "",
+            "profilePic": "",
+            "level": 1
+        },
+        {
+            "id": "4",
+            "name": "יוסף כהן",
+            "previousLastName": "",
+            "role": "נכד",
+            "birth": "1982",
+            "hebrewBirthDate": "",
+            "death": "",
+            "hebrewDeathDate": "",
+            "isAlive": true,
+            "gender": "male",
+            "birthCountry": "ישראל",
+            "lifeStory": "",
+            "profilePic": "",
+            "level": 2
+        },
+        {
+            "id": "5",
+            "name": "שירה לוי",
+            "previousLastName": "כהן",
+            "role": "נכדה",
+            "birth": "1985",
+            "hebrewBirthDate": "",
+            "death": "",
+            "hebrewDeathDate": "",
+            "isAlive": true,
+            "gender": "female",
+            "birthCountry": "ישראל",
+            "lifeStory": "",
+            "profilePic": "",
+            "level": 2
+        },
+        {
+            "id": "6",
+            "name": "יוסף אילון",
+            "previousLastName": "",
+            "role": "",
+            "birth": "1993",
+            "hebrewBirthDate": "ט\"ו בטבת",
+            "death": "",
+            "hebrewDeathDate": "",
+            "isAlive": true,
+            "gender": "male",
+            "birthCountry": "ישראל",
+            "lifeStory": "",
+            "profilePic": "",
+            "level": 1
+        },
+        {
+            "id": "1781881656777",
+            "name": "אסף משה אילון",
+            "previousLastName": "",
+            "role": "",
+            "birth": "",
+            "hebrewBirthDate": "",
+            "death": "",
+            "hebrewDeathDate": "",
+            "isAlive": true,
+            "gender": "male",
+            "birthCountry": "ישראל",
+            "lifeStory": "",
+            "profilePic": "",
+            "level": 2
+        }
+    ],
+    "links": [
+        {
+            "source": "1",
+            "target": "10",
+            "type": "spouse"
+        },
+        {
+            "source": "1",
+            "target": "2",
+            "type": "parent"
+        },
+        {
+            "source": "10",
+            "target": "2",
+            "type": "parent"
+        },
+        {
+            "source": "1",
+            "target": "3",
+            "type": "parent"
+        },
+        {
+            "source": "10",
+            "target": "3",
+            "type": "parent"
+        },
+        {
+            "source": "2",
+            "target": "4",
+            "type": "parent"
+        },
+        {
+            "source": "2",
+            "target": "5",
+            "type": "parent"
+        },
+        {
+            "source": "6",
+            "target": "3",
+            "type": "spouse"
+        },
+        {
+            "source": "3",
+            "target": "1781881656777",
+            "type": "parent"
+        },
+        {
+            "source": "6",
+            "target": "1781881656777",
+            "type": "parent"
+        }
+    ]
+};
+
+        // ==========================================
+        // CORE LOGIC & RENDERING
+        // ==========================================
+        let svg, g, zoom, simulation;
+        
+        // Node dimensions
+        const nodeWidth = 230;
+        const nodeHeight = 110;
+        
+        let currentNode = null;
+        let filteredRootId = null;
+
+        try {
+            if (typeof d3 === 'undefined') throw new Error("D3.js library failed to load. Check internet connection.");
+            lucide.createIcons();
+
+            svg = d3.select("#tree-canvas");
+            g = svg.append("g");
+
+            svg.on("click", (event) => {
+                if(event.target.tagName === 'svg' || event.target.tagName === 'rect') {
+                    d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+                    clearHighlights();
+                }
+            });
+
+            zoom = d3.zoom().scaleExtent([0.1, 3]).on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+            svg.call(zoom);
+            svg.attr("width", window.innerWidth).attr("height", window.innerHeight);
+
+            // Initial positioning logic
+            familyData.nodes.forEach((n, i) => {
+                if (n.x === undefined || isNaN(n.x)) {
+                    n.x = (window.innerWidth / 2) + (Math.random() - 0.5) * 100;
+                    n.y = ((n.level || 0) * 220) + 150 + (Math.random() - 0.5) * 50;
+                }
+                if(n.isAlive === undefined) n.isAlive = n.death === "";
+            });
+
+            // Physics Engine
+            simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(d => d.id).distance(180))
+                .force("charge", d3.forceManyBody().strength(-600))
+                .force("collide", d3.forceCollide().radius(nodeWidth * 0.6).iterations(3))
+                .force("x", d3.forceX(window.innerWidth / 2).strength(0.05))
+                .force("y", d3.forceY(d => (d.level || 0) * 220 + 150).strength(0.8));
+
+            update();
+            setTimeout(() => resetZoom(), 200);
+
+        } catch (error) {
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('error-screen').style.display = 'block';
+            document.getElementById('error-message').innerText = error.message;
+        }
+
+        function update() {
+            let displayNodes = familyData.nodes;
+            let displayLinks = familyData.links;
+
+            if (filteredRootId) {
+                const descendantIds = getDescendantIds(filteredRootId);
+                const spouseIds = getSpouseIds(filteredRootId);
+                const allowedIds = new Set([...descendantIds, ...spouseIds, filteredRootId]);
+
+                displayNodes = familyData.nodes.filter(n => allowedIds.has(n.id));
+                displayLinks = familyData.links.filter(l => {
+                    const s = typeof l.source === 'object' ? l.source.id : l.source;
+                    const t = typeof l.target === 'object' ? l.target.id : l.target;
+                    return allowedIds.has(s) && allowedIds.has(t);
+                });
+                document.getElementById('btn-reset-filter').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-reset-filter').classList.add('hidden');
+            }
+
+            const linkSelection = g.selectAll(".link").data(displayLinks, d => {
+                const s = typeof d.source === 'object' ? d.source.id : d.source;
+                const t = typeof d.target === 'object' ? d.target.id : d.target;
+                return s + "-" + t + "-" + (d.type || 'parent');
+            });
+
+            const linkEnter = linkSelection.enter().insert("path", "g")
+                .attr("class", d => `link ${d.type === 'spouse' ? 'link-spouse' : 'link-parent'}`)
+                .style("opacity", 0);
+
+            const links = linkEnter.merge(linkSelection);
+            links.transition().duration(500).style("opacity", 1);
+            linkSelection.exit().remove();
+
+            const nodeSelection = g.selectAll(".node").data(displayNodes, d => d.id);
+            const nodeEnter = nodeSelection.enter().append("g")
+                .attr("class", "node")
+                .style("opacity", 0)
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            nodeEnter.append("foreignObject")
+                .attr("class", "main-card")
+                .attr("width", nodeWidth).attr("height", nodeHeight)
+                .attr("x", -nodeWidth / 2).attr("y", -nodeHeight / 2)
+                .on("mousedown", (event) => { if(event.defaultPrevented) return; })
+                .on("click", handleNodeClick);
+
+            nodeEnter.append("foreignObject")
+                .attr("class", "node-actions")
+                .attr("width", 180).attr("height", 160)
+                .attr("x", 115).attr("y", -80) 
+                .style("opacity", 0).style("pointer-events", "none").style("transition", "opacity 0.2s ease")
+                .html(d => createActionBubbles(d));
+
+            const nodes = nodeEnter.merge(nodeSelection);
+            nodes.transition().duration(500).style("opacity", 1);
+            nodes.select(".main-card").html(d => createNodeCard(d));
+            nodeSelection.exit().remove();
+
+            simulation.nodes(displayNodes).on("tick", () => {
+                links.attr("d", d => {
+                    if (d.type === 'spouse') {
+                        return `M ${d.source.x} ${d.source.y} L ${d.target.x} ${d.target.y}`;
+                    } else {
+                        const sourceY = d.source.y + (nodeHeight / 2);
+                        const targetY = d.target.y - (nodeHeight / 2);
+                        return `M ${d.source.x} ${sourceY} C ${d.source.x} ${(sourceY + targetY) / 2}, ${d.target.x} ${(sourceY + targetY) / 2}, ${d.target.x} ${targetY}`;
+                    }
+                });
+                nodes.attr("transform", d => `translate(${d.x}, ${d.y})`);
+            });
+
+            simulation.force("link").links(displayLinks);
+            simulation.alpha(1).restart();
+            lucide.createIcons();
+        }
+
+        // --- Interaction Logic ---
+        function handleNodeClick(event, d) {
+            if (event.defaultPrevented) return;
+            event.stopPropagation();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+
+            const parentNode = d3.select(event.currentTarget.parentNode);
+            parentNode.select(".node-actions").style("opacity", 1).style("pointer-events", "auto");
+            parentNode.raise();
+            
+            highlightDescendants(d.id);
+        }
+
+        function showNodeDetailsById(id, event) {
+            if(event) event.stopPropagation();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+            
+            const data = familyData.nodes.find(n => n.id === id);
+            if (!data) return;
+            currentNode = data;
+
+            // Gender Specific Phrasing
+            const isFemale = data.gender === 'female';
+            const bornText = isFemale ? 'נולדה' : 'נולד';
+
+            // View Info Population
+            document.getElementById('view-name').innerText = data.name || 'ללא שם';
+            
+            // Unified Dates
+            const datesEl = document.getElementById('view-dates');
+            if (data.isAlive) {
+                datesEl.innerText = data.birth ? `${bornText}: ${data.birth}` : "";
+            } else {
+                datesEl.innerText = `${data.birth || '?'} - ${data.death || '?'}`;
+            }
+            
+            const prevNameEl = document.getElementById('view-prev-name-container');
+            if (data.previousLastName) {
+                document.getElementById('view-prev-name').innerText = data.previousLastName;
+                prevNameEl.classList.remove('hidden');
+            } else {
+                prevNameEl.classList.add('hidden');
+            }
+
+            const roleEl = document.getElementById('view-role');
+            if (data.role) { roleEl.innerText = data.role; roleEl.classList.remove('hidden'); }
+            else { roleEl.classList.add('hidden'); }
+
+            const countryEl = document.getElementById('view-country');
+            if (data.birthCountry) { document.getElementById('view-country-text').innerText = data.birthCountry; countryEl.classList.remove('hidden'); }
+            else { countryEl.classList.add('hidden'); }
+
+            const hebrewDateEl = document.getElementById('view-hebrew-date');
+            
+            if (data.isAlive && data.hebrewBirthDate) {
+                 document.getElementById('view-hebrew-date-text').innerText = data.hebrewBirthDate;
+                 hebrewDateEl.classList.remove('hidden');
+            } else if (!data.isAlive && data.hebrewDeathDate) {
+                document.getElementById('view-hebrew-date-text').innerText = `תאריך פטירה: ${data.hebrewDeathDate}`;
+                hebrewDateEl.classList.remove('hidden');
+            } else {
+                hebrewDateEl.classList.add('hidden');
+            }
+
+            // Descendants Count
+            const descCount = getDescendantIds(data.id).size - 1;
+            const descEl = document.getElementById('view-descendants');
+            if (descCount > 0) {
+                document.getElementById('view-descendants-text').innerText = `${descCount} צאצאים`;
+                descEl.classList.remove('hidden');
+            } else {
+                descEl.classList.add('hidden');
+            }
+
+            const storyContainer = document.getElementById('view-story-container');
+            if (data.lifeStory && data.lifeStory.trim() !== '') {
+                document.getElementById('view-story').innerText = data.lifeStory;
+                storyContainer.classList.remove('hidden');
+            } else {
+                storyContainer.classList.add('hidden');
+            }
+            
+            const iconBg = document.getElementById('view-icon-bg');
+            iconBg.className = "w-28 h-28 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border-4 border-white overflow-hidden relative " + 
+                (data.gender === 'male' ? 'bg-blue-400' : (data.gender === 'female' ? 'bg-rose-400' : 'bg-slate-400'));
+            
+            const picEl = document.getElementById('view-profile-pic');
+            if (data.profilePic) {
+                picEl.src = data.profilePic;
+                picEl.classList.remove('hidden');
+            } else {
+                picEl.src = "";
+                picEl.classList.add('hidden');
+            }
+
+            const backdrop = document.getElementById('modal-backdrop');
+            const viewModal = document.getElementById('view-modal');
+            backdrop.classList.remove('hidden'); viewModal.classList.remove('hidden');
+            setTimeout(() => { backdrop.classList.add('backdrop-enter-active'); viewModal.classList.add('modal-enter-active'); }, 10);
+            
+            lucide.createIcons();
+        }
+
+        function filterFamilyById(id, event) {
+            if(event) event.stopPropagation();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+            const data = familyData.nodes.find(n => n.id === id);
+            if (!data) return;
+            filteredRootId = id;
+            clearHighlights(); update();
+        }
+
+        function toggleDeathInputs() {
+            const isAlive = document.getElementById('edit-status').value === "true";
+            const deathInput = document.getElementById('edit-death-wrapper');
+            const hebrewDeathInput = document.getElementById('edit-hebrew-death-wrapper');
+            const hebrewBirthInput = document.getElementById('edit-hebrew-birth-wrapper');
+            
+            if (isAlive) { 
+                deathInput.classList.add('opacity-40', 'pointer-events-none'); 
+                hebrewDeathInput.classList.add('opacity-40', 'pointer-events-none');
+                hebrewBirthInput.classList.remove('opacity-40', 'pointer-events-none');
+                document.getElementById('edit-death').value = ""; 
+                document.getElementById('edit-hebrew-death').value = "";
+            } else { 
+                deathInput.classList.remove('opacity-40', 'pointer-events-none'); 
+                hebrewDeathInput.classList.remove('opacity-40', 'pointer-events-none');
+                hebrewBirthInput.classList.add('opacity-40', 'pointer-events-none');
+                document.getElementById('edit-hebrew-birth').value = "";
+            }
+        }
+
+        function switchToEdit() {
+            if (!currentNode) return;
+            const data = currentNode;
+
+            const viewModal = document.getElementById('view-modal');
+            viewModal.classList.remove('modal-enter-active');
+            setTimeout(() => { viewModal.classList.add('hidden'); }, 300);
+
+            document.getElementById('edit-node-id').value = data.id;
+            document.getElementById('edit-name').value = data.name || '';
+            document.getElementById('edit-prev-name').value = data.previousLastName || '';
+            document.getElementById('edit-birth').value = data.birth || '';
+            document.getElementById('edit-hebrew-birth').value = data.hebrewBirthDate || '';
+            document.getElementById('edit-death').value = data.death || '';
+            document.getElementById('edit-hebrew-death').value = data.hebrewDeathDate || '';
+            document.getElementById('edit-role').value = data.role || '';
+            document.getElementById('edit-gender').value = data.gender || 'neutral';
+            document.getElementById('edit-country').value = data.birthCountry || '';
+            document.getElementById('edit-status').value = data.isAlive ? "true" : "false";
+            document.getElementById('edit-story').value = data.lifeStory || '';
+            
+            document.getElementById('edit-pic-base64').value = data.profilePic || '';
+            const editPicPreview = document.getElementById('edit-pic-preview');
+            const editPicIcon = document.getElementById('edit-pic-icon');
+            if(data.profilePic) {
+                editPicPreview.src = data.profilePic;
+                editPicPreview.classList.remove('hidden');
+                editPicIcon.classList.add('hidden');
+            } else {
+                editPicPreview.src = '';
+                editPicPreview.classList.add('hidden');
+                editPicIcon.classList.remove('hidden');
+            }
+
+            toggleDeathInputs();
+
+            const targetSelect = document.getElementById('add-link-target');
+            targetSelect.innerHTML = '<option value="">בחר ישות...</option>';
+            familyData.nodes.forEach(n => {
+                if(n.id !== currentNode.id) {
+                    const opt = document.createElement('option');
+                    opt.value = n.id; opt.textContent = n.name;
+                    targetSelect.appendChild(opt);
+                }
+            });
+
+            const editModal = document.getElementById('action-modal');
+            editModal.classList.remove('hidden');
+            setTimeout(() => { editModal.classList.add('modal-enter-active'); }, 10);
+        }
+
+        // --- Handle Image Resize and Base64 Conversion ---
+        function handleImageUpload(eventUpload) {
+            const file = eventUpload.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 250;
+                    const MAX_HEIGHT = 250;
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > height && width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width; width = MAX_WIDTH;
+                    } else if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height; height = MAX_HEIGHT;
+                    }
+                    
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    document.getElementById('edit-pic-base64').value = dataUrl;
+                    const preview = document.getElementById('edit-pic-preview');
+                    preview.src = dataUrl;
+                    preview.classList.remove('hidden');
+                    document.getElementById('edit-pic-icon').classList.add('hidden');
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // --- Graph Traversals ---
+        function getDescendantIds(nodeId, visited = new Set()) {
+            if (visited.has(nodeId)) return visited;
+            visited.add(nodeId);
+            const childrenIds = familyData.links
+                .filter(l => {
+                    const s = typeof l.source === 'object' ? l.source.id : l.source;
+                    return s === nodeId && (l.type === 'parent' || !l.type);
+                })
+                .map(l => typeof l.target === 'object' ? l.target.id : l.target);
+            childrenIds.forEach(cId => getDescendantIds(cId, visited));
+            return visited;
+        }
+
+        function getSpouseIds(nodeId) {
+            const spouses = new Set();
+            familyData.links.forEach(l => {
+                if (l.type === 'spouse') {
+                    const s = typeof l.source === 'object' ? l.source.id : l.source;
+                    const t = typeof l.target === 'object' ? l.target.id : l.target;
+                    if (s === nodeId) spouses.add(t);
+                    if (t === nodeId) spouses.add(s);
+                }
+            });
+            return spouses;
+        }
+
+        function highlightDescendants(rootId) {
+            const descIds = getDescendantIds(rootId);
+            g.selectAll(".link").classed("link-dimmed", true).classed("link-highlight", false);
+            g.selectAll(".node").classed("node-dimmed", true);
+
+            g.selectAll(".link").filter(d => {
+                const s = typeof d.source === 'object' ? d.source.id : d.source;
+                return descIds.has(s) && (d.type === 'parent' || !d.type);
+            }).classed("link-dimmed", false).classed("link-highlight", true);
+
+            g.selectAll(".node").filter(d => descIds.has(d.id)).classed("node-dimmed", false);
+        }
+
+        function clearHighlights() {
+            g.selectAll(".link").classed("link-dimmed", false).classed("link-highlight", false);
+            g.selectAll(".node").classed("node-dimmed", false);
+        }
+
+        function resetFilter() { filteredRootId = null; update(); }
+
+        // --- DOM Generators ---
+        function createNodeCard(data) {
+            let colorClasses = "border-slate-200 text-slate-700 bg-white";
+            let iconColor = "text-slate-400 bg-slate-100";
+            if (data.gender === "male") { colorClasses = "border-blue-200 text-blue-900 bg-white"; iconColor = "text-blue-500 bg-blue-50"; }
+            else if (data.gender === "female") { colorClasses = "border-rose-200 text-rose-900 bg-white"; iconColor = "text-rose-500 bg-rose-50"; }
+
+            // Gender Specific Phrasing
+            const isFemale = data.gender === 'female';
+            const bornText = isFemale ? 'נולדה' : 'נולד';
+            const celebrateText = isFemale ? 'חוגגת' : 'חוגג';
+
+            // Birthday Check (Hebrew)
+            let isBirthdayMonth = false;
+            let currentHebMonth = "";
+            if (data.isAlive && data.hebrewBirthDate) {
+                try {
+                    currentHebMonth = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', {month: 'long'}).format(new Date()).replace('מרחשוון', 'חשוון');
+                    const cleanMonth = currentHebMonth.replace(/['׳]/g, '');
+                    const cleanBirth = data.hebrewBirthDate.replace(/['׳]/g, '');
+                    if (cleanBirth.includes(cleanMonth)) {
+                        isBirthdayMonth = true;
+                    }
+                } catch(e) {}
+            }
+
+            if (isBirthdayMonth) {
+                colorClasses = colorClasses.replace("border-slate-200", "border-indigo-400").replace("border-blue-200", "border-indigo-400").replace("border-rose-200", "border-indigo-400");
+                colorClasses += " ring-2 ring-indigo-400 shadow-md shadow-indigo-100";
+            }
+
+            let dateHtml = "";
+            if (data.isAlive) {
+                dateHtml = `<div class="truncate">${data.birth ? `${bornText}: ${data.birth}` : 'שנת לידה לא ידועה'}</div>`;
+                if (data.hebrewBirthDate) {
+                    if (isBirthdayMonth) {
+                        dateHtml += `<div class="text-indigo-600 font-bold bg-indigo-50 inline-flex items-center gap-1 px-1.5 py-0.5 rounded mt-0.5 text-[10px] w-max"><i data-lucide="cake" class="w-3 h-3"></i> ${celebrateText} ב${currentHebMonth}!</div>`;
+                    } else {
+                        dateHtml += `<div class="text-slate-400 text-[10px] mt-0.5 truncate">${data.hebrewBirthDate}</div>`;
+                    }
+                }
+            } else {
+                dateHtml = `
+                    <div class="truncate text-slate-600 font-semibold mt-0.5">${data.birth || '?'} - ${data.death || '?'}</div>
+                `;
+                if (data.hebrewDeathDate) {
+                    dateHtml += `<div class="text-slate-400 text-[10.5px] mt-0.5 truncate">תאריך פטירה: ${data.hebrewDeathDate}</div>`;
+                }
+            }
+
+            const accent = data.gender === 'male' ? 'bg-blue-400' : (data.gender === 'female' ? 'bg-rose-400' : 'bg-slate-400');
+            
+            const picHtml = data.profilePic 
+                ? `<img src="${data.profilePic}" class="w-full h-full object-cover" />`
+                : `<i data-lucide="user" class="w-5 h-5"></i>`;
+
+            return `
+                <div class="node-card border-2 ${colorClasses} rounded-xl h-full w-full flex items-center p-3 relative bg-white">
+                    <div class="absolute right-0 top-0 bottom-0 w-1.5 ${accent} rounded-r-xl"></div>
+                    <div class="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center mr-2 ml-3 ${iconColor} overflow-hidden border border-slate-100">
+                        ${picHtml}
+                    </div>
+                    <div class="flex-1 overflow-hidden pl-7">
+                        <div class="font-bold text-sm truncate">${data.name || 'ללא שם'}</div>
+                        <div class="text-[11px] opacity-80 truncate mb-1">${data.role || 'ישות'}</div>
+                        <div class="text-xs text-slate-500 leading-snug flex flex-col justify-center">
+                            ${dateHtml}
+                        </div>
+                    </div>
+                    <!-- Info Icon -->
+                    <button onclick="showNodeDetailsById('${data.id}', event)" onmousedown="event.stopPropagation()" class="absolute top-2.5 left-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 bg-white/80 rounded-full p-1 transition-colors z-20" title="הצג פרטים מלאים">
+                        <i data-lucide="info" class="w-[18px] h-[18px]"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function createActionBubbles(data) {
+            return `
+                <div style="direction: ltr;" class="relative w-full h-full pointer-events-none">
+                    <svg class="absolute top-0 left-0 w-full h-full overflow-visible pointer-events-none -z-10">
+                        <path d="M 0 80 C 25 80, 25 40, 50 40" stroke="#94a3b8" stroke-width="2" fill="none" />
+                        <path d="M 0 80 C 25 80, 25 120, 50 120" stroke="#94a3b8" stroke-width="2" fill="none" />
+                    </svg>
+                    
+                    <div class="absolute left-[26px] top-[16px] flex items-center pointer-events-auto z-10">
+                        <button onclick="showNodeDetailsById('${data.id}', event)" title="הצג פרטים" class="w-12 h-12 rounded-full bg-white border-2 border-indigo-500 text-indigo-600 flex items-center justify-center hover:bg-indigo-50 shadow-md transition-all transform hover:scale-110">
+                            <i data-lucide="info" class="w-5 h-5"></i>
+                        </button>
+                        <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">פרטים</span>
+                    </div>
+
+                    <div class="absolute left-[26px] top-[96px] flex items-center pointer-events-auto z-10">
+                        <button onclick="filterFamilyById('${data.id}', event)" title="הצג משפחה" class="w-12 h-12 rounded-full bg-white border-2 border-emerald-500 text-emerald-600 flex items-center justify-center hover:bg-emerald-50 shadow-md transition-all transform hover:scale-110">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                        </button>
+                        <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">משפחה</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Drag Behavior ---
+        function dragstarted(event, d) {
+            d3.select(event.currentTarget).raise(); 
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x; d.fy = d.y;
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+        }
+        function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null; d.fy = null;
+        }
+
+        // --- Core CRUD ---
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const editModal = document.getElementById('action-modal');
+            const viewModal = document.getElementById('view-modal');
+
+            backdrop.classList.remove('backdrop-enter-active'); 
+            editModal.classList.remove('modal-enter-active');
+            viewModal.classList.remove('modal-enter-active');
+
+            setTimeout(() => { 
+                backdrop.classList.add('hidden'); 
+                editModal.classList.add('hidden'); 
+                viewModal.classList.add('hidden');
+                currentNode = null; 
+            }, 300);
+        }
+
+        function saveNode() {
+            if (!currentNode) return;
+            const node = familyData.nodes.find(n => n.id === currentNode.id);
+            if (node) {
+                node.name = document.getElementById('edit-name').value;
+                node.previousLastName = document.getElementById('edit-prev-name').value;
+                node.birth = document.getElementById('edit-birth').value;
+                node.hebrewBirthDate = document.getElementById('edit-hebrew-birth').value;
+                node.isAlive = document.getElementById('edit-status').value === "true";
+                node.death = node.isAlive ? "" : document.getElementById('edit-death').value;
+                node.hebrewDeathDate = node.isAlive ? "" : document.getElementById('edit-hebrew-death').value;
+                node.role = document.getElementById('edit-role').value;
+                node.gender = document.getElementById('edit-gender').value;
+                node.birthCountry = document.getElementById('edit-country').value;
+                node.lifeStory = document.getElementById('edit-story').value;
+                node.profilePic = document.getElementById('edit-pic-base64').value;
+            }
+            resetFilter(); closeModal();
+        }
+
+        function addChild() {
+            if (!currentNode) return;
+            const newId = Date.now().toString();
+            const childLevel = (currentNode.level || 0) + 1;
+            
+            const newNode = { 
+                id: newId, name: "ישות חדשה", previousLastName: "", role: "ילד", 
+                birth: "", hebrewBirthDate: "", death: "", hebrewDeathDate: "", isAlive: true, gender: "neutral", 
+                birthCountry: "", lifeStory: "", profilePic: "", level: childLevel 
+            };
+            newNode.x = currentNode.x || (window.innerWidth / 2);
+            newNode.y = (currentNode.y || 150) + 200;
+            
+            familyData.nodes.push(newNode);
+            familyData.links.push({ source: currentNode.id, target: newId, type: "parent" });
+            
+            resetFilter(); closeModal();
+        }
+
+        function addLink() {
+            if (!currentNode) return;
+            const targetId = document.getElementById('add-link-target').value;
+            const linkType = document.getElementById('add-link-type').value;
+            if (!targetId) return;
+
+            const exists = familyData.links.some(l => 
+                ((typeof l.source === 'object' ? l.source.id === targetId : l.source === targetId) && 
+                 (typeof l.target === 'object' ? l.target.id === currentNode.id : l.target === currentNode.id)) ||
+                ((typeof l.source === 'object' ? l.source.id === currentNode.id : l.source === currentNode.id) && 
+                 (typeof l.target === 'object' ? l.target.id === targetId : l.target === targetId))
+            );
+
+            if (!exists) {
+                if (linkType === 'parent') {
+                    familyData.links.push({ source: targetId, target: currentNode.id, type: linkType });
+                } else {
+                    familyData.links.push({ source: currentNode.id, target: targetId, type: linkType });
+                }
+                resetFilter(); alert('הקשר נוצר בהצלחה!');
+            } else { alert('כבר קיים קשר בין ישויות אלו.'); }
+        }
+
+        function deleteNode() {
+            if (!currentNode) return;
+            if (confirm(`למחוק את ${currentNode.name}?`)) {
+                familyData.nodes = familyData.nodes.filter(n => n.id !== currentNode.id);
+                familyData.links = familyData.links.filter(l => {
+                    const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+                    const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+                    return sourceId !== currentNode.id && targetId !== currentNode.id;
+                });
+                resetFilter(); closeModal();
+            }
+        }
+
+        function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.3); }
+        function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 0.7); }
+        function resetZoom() { svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(window.innerWidth / 2, 50).scale(1)); }
+        
+        function getCleanDataString() {
+            const cleanData = {
+                nodes: familyData.nodes.map(n => ({ 
+                    id: n.id, name: n.name, previousLastName: n.previousLastName || "", 
+                    role: n.role, birth: n.birth, hebrewBirthDate: n.hebrewBirthDate || "", death: n.death, hebrewDeathDate: n.hebrewDeathDate || "", 
+                    isAlive: n.isAlive, gender: n.gender, birthCountry: n.birthCountry || "", 
+                    lifeStory: n.lifeStory || "", profilePic: n.profilePic || "", 
+                    level: n.level || 0 
+                })),
+                links: familyData.links.map(l => ({
+                    source: typeof l.source === 'object' ? l.source.id : l.source,
+                    target: typeof l.target === 'object' ? l.target.id : l.target,
+                    type: l.type || "parent"
+                }))
+            };
+            return JSON.stringify(cleanData, null, 4);
+        }
+
+        function exportHTML() {
+            resetFilter(); // Clean filters before export
+            clearHighlights();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+
+            const clone = document.documentElement.cloneNode(true);
+            const canvas = clone.querySelector("#tree-canvas");
+            if (canvas) { canvas.innerHTML = ''; canvas.removeAttribute("data-centered"); }
+            
+            const backdrop = clone.querySelector("#modal-backdrop");
+            const actionModal = clone.querySelector("#action-modal");
+            const viewModal = clone.querySelector("#view-modal");
+            
+            if (backdrop) backdrop.className = "fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden backdrop-enter";
+            if (actionModal) actionModal.className = "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[95vh]";
+            if (viewModal) viewModal.className = "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[90vh]";
+            
+            let htmlContent = "<!DOCTYPE html>\n" + clone.outerHTML;
+            
+            // Regex to inject the updated data safely
+            const regex = /(let\s+familyData\s*=\s*)\{[\s\S]*?\};/;
+            htmlContent = htmlContent.replace(regex, `$1${getCleanDataString()};`);
+            
+            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const dl = document.createElement("a");
+            dl.setAttribute("href", url);
+            dl.setAttribute("download", "family_graph_updated.html");
+            document.body.appendChild(dl);
+            dl.click();
+            document.body.removeChild(dl);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+
+
+</body></html>
