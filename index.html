@@ -289,268 +289,692 @@
                 { "id": "1", "name": "אברהם כהן", "role": "אב המשפחה", "birth": "1930", "hebrewBirthDate": "", "death": "2010", "gender": "male", "level": 0, "isAlive": false, "birthCountry": "מרוקו", "previousLastName": "", "lifeStory": "עלה לארץ בשנת 1950. בנה את ביתו בירושלים והיה ממייסדי הקהילה המקומית.", "profilePic": "", "hebrewDeathDate": "י' באב" },
                 { "id": "10", "name": "שרה כהן", "role": "אם המשפחה", "birth": "1932", "hebrewBirthDate": "", "death": "2015", "gender": "female", "level": 0, "isAlive": false, "birthCountry": "מרוקו", "previousLastName": "לוי", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "ג' בחשוון" },
                 { "id": "2", "name": "דוד כהן", "role": "בן", "birth": "1955", "hebrewBirthDate": "א' בניסן ה'תשט\"ו", "death": "", "gender": "male", "level": 1, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
-                { "id": "3", "name": "רחל ישראלי", "role": "בת", "birth": "1958", "hebrewBirthDate": "ט\"ו בשבט ה'        .backdrop-enter { opacity: 0; transition: opacity 0.3s ease; }
-        .backdrop-enter-active { opacity: 1; }
+                { "id": "3", "name": "רחל ישראלי", "role": "בת", "birth": "1958", "hebrewBirthDate": "ט\"ו בשבט ה'תשי\"ח", "death": "", "gender": "female", "level": 1, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "כהן", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
+                { "id": "4", "name": "יוסף כהן", "role": "נכד", "birth": "1982", "hebrewBirthDate": "", "death": "", "gender": "male", "level": 2, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
+                { "id": "5", "name": "שירה לוי", "role": "נכדה", "birth": "1985", "hebrewBirthDate": "", "death": "", "gender": "female", "level": 2, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "כהן", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
+                { "id": "6", "name": "רועי ישראלי", "role": "בעל", "birth": "1956", "hebrewBirthDate": "", "death": "", "gender": "male", "level": 1, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" }
+            ],
+            "links": [
+                { "source": "1", "target": "10", "type": "spouse" },
+                { "source": "1", "target": "2", "type": "parent" },
+                { "source": "10", "target": "2", "type": "parent" },
+                { "source": "1", "target": "3", "type": "parent" },
+                { "source": "10", "target": "3", "type": "parent" },
+                { "source": "2", "target": "4", "type": "parent" },
+                { "source": "2", "target": "5", "type": "parent" },
+                { "source": "6", "target": "3", "type": "spouse" }
+            ]
+        };
+
+        // ==========================================
+        // CORE LOGIC & RENDERING
+        // ==========================================
+        let svg, g, zoom, simulation;
         
-        /* Custom Scrollbar for Textareas */
-        textarea::-webkit-scrollbar { width: 8px; }
-        textarea::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        textarea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        textarea::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
-</head>
-<body class="text-slate-800 antialiased">
+        // Node dimensions
+        const nodeWidth = 230;
+        const nodeHeight = 110;
+        
+        let currentNode = null;
+        let filteredRootId = null;
 
-    <div id="error-screen" style="display: none; padding: 40px; color: red; text-align: center; direction: ltr; position: relative; z-index: 999;">
-        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">🚨 JavaScript Error Detected</h1>
-        <p id="error-message" style="font-family: monospace; background: #fee2e2; padding: 15px; border-radius: 8px;"></p>
-        <p style="margin-top: 20px; color: #333;">Press <strong>F12</strong> to open the browser console for more details.</p>
-    </div>
+        try {
+            if (typeof d3 === 'undefined') throw new Error("D3.js library failed to load. Check internet connection.");
+            lucide.createIcons();
 
-    <div id="app-container">
-        <!-- SVG Canvas Background -->
-        <svg class="absolute inset-0 z-0 pointer-events-none" width="100%" height="100%">
-            <defs>
-                <pattern id="dot-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <circle cx="2" cy="2" r="1" fill="#e2e8f0"></circle>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#dot-grid)"></rect>
-        </svg>
+            svg = d3.select("#tree-canvas");
+            g = svg.append("g");
 
-        <!-- Top Right Controls -->
-        <div class="absolute top-6 right-6 z-10 flex gap-3">
-            <div class="bg-white/80 backdrop-blur-md p-2 rounded-xl shadow-sm border border-slate-200 flex items-center gap-2">
-                <button onclick="zoomIn()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
-                    <i data-lucide="zoom-in" class="w-5 h-5"></i>
-                </button>
-                <div class="w-px h-6 bg-slate-200"></div>
-                <button onclick="zoomOut()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
-                    <i data-lucide="zoom-out" class="w-5 h-5"></i>
-                </button>
-                <div class="w-px h-6 bg-slate-200"></div>
-                <button onclick="resetZoom()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
-                    <i data-lucide="focus" class="w-5 h-5"></i>
-                </button>
-            </div>
-        </div>
+            svg.on("click", (event) => {
+                if(event.target.tagName === 'svg' || event.target.tagName === 'rect') {
+                    d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+                    clearHighlights();
+                }
+            });
 
-        <!-- Top Left Controls -->
-        <div class="absolute top-6 left-6 z-10 flex gap-3">
-            <button id="btn-reset-filter" onclick="resetFilter()" class="hidden bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl shadow-md transition-all font-medium flex items-center gap-2 text-sm">
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                הצג הכל
-            </button>
-            <button onclick="openShareModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow-md transition-all font-medium flex items-center gap-2 text-sm">
-                <i data-lucide="send" class="w-4 h-4"></i>
-                שלח עדכון
-            </button>
-            <button onclick="exportHTML()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-md transition-all font-medium flex items-center gap-2 text-sm">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                שמור מודל מעודכן
-            </button>
-        </div>
+            zoom = d3.zoom().scaleExtent([0.1, 3]).on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+            svg.call(zoom);
+            svg.attr("width", window.innerWidth).attr("height", window.innerHeight);
 
-        <svg id="tree-canvas" class="relative z-0"></svg>
+            // Initial positioning logic
+            familyData.nodes.forEach((n, i) => {
+                if (n.x === undefined || isNaN(n.x)) {
+                    n.x = (window.innerWidth / 2) + (Math.random() - 0.5) * 100;
+                    n.y = ((n.level || 0) * 220) + 150 + (Math.random() - 0.5) * 50;
+                }
+                if(n.isAlive === undefined) n.isAlive = n.death === "";
+            });
 
-        <!-- Modals Backdrop -->
-        <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden backdrop-enter" onclick="closeModal()"></div>
+            // Physics Engine
+            simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(d => d.id).distance(180))
+                .force("charge", d3.forceManyBody().strength(-600))
+                .force("collide", d3.forceCollide().radius(nodeWidth * 0.6).iterations(3))
+                .force("x", d3.forceX(window.innerWidth / 2).strength(0.05))
+                .force("y", d3.forceY(d => (d.level || 0) * 220 + 150).strength(0.8));
 
-        <!-- View Details Modal (Read Only) -->
-        <div id="view-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[90vh]">
-            <div class="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl shrink-0">
-                <div class="flex items-center gap-2">
-                    <button onclick="switchToEdit()" class="text-slate-500 hover:text-indigo-600 bg-white border border-slate-200 shadow-sm p-2 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105" title="עריכת פרטים והגדרות">
-                        <i data-lucide="settings" class="w-5 h-5"></i>
-                    </button>
-                    <span class="text-xs font-semibold text-slate-400 bg-slate-200 px-2 py-1 rounded-lg">קריאה בלבד</span>
-                </div>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+            update();
+            setTimeout(() => resetZoom(), 200);
+
+        } catch (error) {
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('error-screen').style.display = 'block';
+            document.getElementById('error-message').innerText = error.message;
+        }
+
+        function update() {
+            let displayNodes = familyData.nodes;
+            let displayLinks = familyData.links;
+
+            if (filteredRootId) {
+                const descendantIds = getDescendantIds(filteredRootId);
+                const spouseIds = getSpouseIds(filteredRootId);
+                const allowedIds = new Set([...descendantIds, ...spouseIds, filteredRootId]);
+
+                displayNodes = familyData.nodes.filter(n => allowedIds.has(n.id));
+                displayLinks = familyData.links.filter(l => {
+                    const s = typeof l.source === 'object' ? l.source.id : l.source;
+                    const t = typeof l.target === 'object' ? l.target.id : l.target;
+                    return allowedIds.has(s) && allowedIds.has(t);
+                });
+                document.getElementById('btn-reset-filter').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-reset-filter').classList.add('hidden');
+            }
+
+            const linkSelection = g.selectAll(".link").data(displayLinks, d => {
+                const s = typeof d.source === 'object' ? d.source.id : d.source;
+                const t = typeof d.target === 'object' ? d.target.id : d.target;
+                return s + "-" + t + "-" + (d.type || 'parent');
+            });
+
+            const linkEnter = linkSelection.enter().insert("path", "g")
+                .attr("class", d => `link ${d.type === 'spouse' ? 'link-spouse' : 'link-parent'}`)
+                .style("opacity", 0);
+
+            const links = linkEnter.merge(linkSelection);
+            links.transition().duration(500).style("opacity", 1);
+            linkSelection.exit().remove();
+
+            const nodeSelection = g.selectAll(".node").data(displayNodes, d => d.id);
+            const nodeEnter = nodeSelection.enter().append("g")
+                .attr("class", "node")
+                .style("opacity", 0)
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            nodeEnter.append("foreignObject")
+                .attr("class", "main-card")
+                .attr("width", nodeWidth).attr("height", nodeHeight)
+                .attr("x", -nodeWidth / 2).attr("y", -nodeHeight / 2)
+                .on("mousedown", (event) => { if(event.defaultPrevented) return; })
+                .on("click", handleNodeClick);
+
+            nodeEnter.append("foreignObject")
+                .attr("class", "node-actions")
+                .attr("width", 180).attr("height", 160)
+                .attr("x", 115).attr("y", -80) 
+                .style("opacity", 0).style("pointer-events", "none").style("transition", "opacity 0.2s ease")
+                .html(d => createActionBubbles(d));
+
+            const nodes = nodeEnter.merge(nodeSelection);
+            nodes.transition().duration(500).style("opacity", 1);
+            nodes.select(".main-card").html(d => createNodeCard(d));
+            nodeSelection.exit().remove();
+
+            simulation.nodes(displayNodes).on("tick", () => {
+                links.attr("d", d => {
+                    if (d.type === 'spouse') {
+                        return `M ${d.source.x} ${d.source.y} L ${d.target.x} ${d.target.y}`;
+                    } else {
+                        const sourceY = d.source.y + (nodeHeight / 2);
+                        const targetY = d.target.y - (nodeHeight / 2);
+                        return `M ${d.source.x} ${sourceY} C ${d.source.x} ${(sourceY + targetY) / 2}, ${d.target.x} ${(sourceY + targetY) / 2}, ${d.target.x} ${targetY}`;
+                    }
+                });
+                nodes.attr("transform", d => `translate(${d.x}, ${d.y})`);
+            });
+
+            simulation.force("link").links(displayLinks);
+            simulation.alpha(1).restart();
+            lucide.createIcons();
+        }
+
+        // --- Interaction Logic ---
+        function handleNodeClick(event, d) {
+            if (event.defaultPrevented) return;
+            event.stopPropagation();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+
+            const parentNode = d3.select(event.currentTarget.parentNode);
+            parentNode.select(".node-actions").style("opacity", 1).style("pointer-events", "auto");
+            parentNode.raise();
             
-            <div class="p-6 overflow-y-auto">
-                <div class="text-center mb-6">
-                    <div id="view-icon-bg" class="w-28 h-28 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border-4 border-white overflow-hidden relative">
-                        <i id="view-icon-fallback" data-lucide="user" class="w-12 h-12 text-white"></i>
-                        <img id="view-profile-pic" class="w-full h-full object-cover hidden absolute inset-0 z-10" />
-                    </div>
-                    <h2 id="view-name" class="text-3xl font-bold text-slate-800 mb-1"></h2>
-                    
-                    <!-- Unified Dates Display -->
-                    <div id="view-dates" class="text-lg font-semibold text-slate-700 mb-2 flex items-center justify-center flex-wrap"></div>
-                    
-                    <div id="view-prev-name-container" class="text-sm text-slate-500 mb-4 hidden">
-                        שם קודם: <span id="view-prev-name"></span>
-                    </div>
-                    
-                    <div class="flex flex-wrap justify-center gap-2 mb-2">
-                        <span id="view-role" class="text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full hidden"></span>
-                        
-                        <span id="view-descendants" class="text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full hidden flex items-center gap-1.5">
-                            <i data-lucide="users" class="w-3.5 h-3.5"></i>
-                            <span id="view-descendants-text"></span>
-                        </span>
+            highlightDescendants(d.id);
+        }
 
-                        <span id="view-hebrew-date" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full hidden flex items-center gap-1.5">
-                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                            <span id="view-hebrew-date-text"></span>
-                        </span>
-
-                        <span id="view-country" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full hidden flex items-center gap-1">
-                            <i data-lucide="map-pin" class="w-3 h-3"></i>
-                            <span id="view-country-text"></span>
-                        </span>
-                    </div>
-                </div>
-
-                <div id="view-story-container" class="hidden mt-6">
-                    <h4 class="text-sm font-bold text-slate-700 mb-2 border-b border-slate-100 pb-2">סיפור חיים</h4>
-                    <p id="view-story" class="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap"></p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit/Add Actions Modal -->
-        <div id="action-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[95vh]">
-            <div class="flex items-center justify-between p-5 border-b border-slate-100 bg-indigo-50 rounded-t-2xl shrink-0">
-                <h3 class="text-lg font-semibold text-indigo-900 flex items-center gap-2">
-                    <i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i>
-                    עריכת ישות והגדרות
-                </h3>
-                <button onclick="closeModal()" class="text-indigo-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-100 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+        function showNodeDetailsById(id, event) {
+            if(event) event.stopPropagation();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
             
-            <div class="p-6 overflow-y-auto">
-                <input type="hidden" id="edit-node-id">
-                
-                <!-- Profile Image Upload Area -->
-                <div class="mb-6 flex justify-center">
-                    <div class="relative w-24 h-24 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center hover:bg-slate-200 transition-colors cursor-pointer group" onclick="document.getElementById('edit-pic-upload').click()">
-                        <img id="edit-pic-preview" class="absolute inset-0 w-full h-full object-cover rounded-full z-10 hidden" />
-                        <i id="edit-pic-icon" data-lucide="camera" class="w-8 h-8 text-slate-400 group-hover:text-slate-500 z-0"></i>
-                        <input type="file" id="edit-pic-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                        <input type="hidden" id="edit-pic-base64">
-                    </div>
-                </div>
+            const data = familyData.nodes.find(n => n.id === id);
+            if (!data) return;
+            currentNode = data;
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">שם מלא</label>
-                        <input type="text" id="edit-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">שם משפחה קודם</label>
-                        <input type="text" id="edit-prev-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל לפני נישואין">
-                    </div>
+            // Gender Specific Phrasing
+            const isFemale = data.gender === 'female';
+            const bornText = isFemale ? 'נולדה' : 'נולד';
+
+            // View Info Population
+            document.getElementById('view-name').innerText = data.name || 'ללא שם';
+            
+            // Unified Dates
+            const datesEl = document.getElementById('view-dates');
+            if (data.isAlive) {
+                datesEl.innerText = data.birth ? `${bornText}: ${data.birth}` : "";
+            } else {
+                datesEl.innerText = `${data.birth || '?'} - ${data.death || '?'}`;
+            }
+            
+            const prevNameEl = document.getElementById('view-prev-name-container');
+            if (data.previousLastName) {
+                document.getElementById('view-prev-name').innerText = data.previousLastName;
+                prevNameEl.classList.remove('hidden');
+            } else {
+                prevNameEl.classList.add('hidden');
+            }
+
+            const roleEl = document.getElementById('view-role');
+            if (data.role) { roleEl.innerText = data.role; roleEl.classList.remove('hidden'); }
+            else { roleEl.classList.add('hidden'); }
+
+            const countryEl = document.getElementById('view-country');
+            if (data.birthCountry) { document.getElementById('view-country-text').innerText = data.birthCountry; countryEl.classList.remove('hidden'); }
+            else { countryEl.classList.add('hidden'); }
+
+            const hebrewDateEl = document.getElementById('view-hebrew-date');
+            
+            if (data.isAlive && data.hebrewBirthDate) {
+                 document.getElementById('view-hebrew-date-text').innerText = data.hebrewBirthDate;
+                 hebrewDateEl.classList.remove('hidden');
+            } else if (!data.isAlive && data.hebrewDeathDate) {
+                document.getElementById('view-hebrew-date-text').innerText = `תאריך פטירה: ${data.hebrewDeathDate}`;
+                hebrewDateEl.classList.remove('hidden');
+            } else {
+                hebrewDateEl.classList.add('hidden');
+            }
+
+            // Descendants Count
+            const descCount = getDescendantIds(data.id).size - 1;
+            const descEl = document.getElementById('view-descendants');
+            if (descCount > 0) {
+                document.getElementById('view-descendants-text').innerText = `${descCount} צאצאים`;
+                descEl.classList.remove('hidden');
+            } else {
+                descEl.classList.add('hidden');
+            }
+
+            const storyContainer = document.getElementById('view-story-container');
+            if (data.lifeStory && data.lifeStory.trim() !== '') {
+                document.getElementById('view-story').innerText = data.lifeStory;
+                storyContainer.classList.remove('hidden');
+            } else {
+                storyContainer.classList.add('hidden');
+            }
+            
+            const iconBg = document.getElementById('view-icon-bg');
+            iconBg.className = "w-28 h-28 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border-4 border-white overflow-hidden relative " + 
+                (data.gender === 'male' ? 'bg-blue-400' : (data.gender === 'female' ? 'bg-rose-400' : 'bg-slate-400'));
+            
+            const picEl = document.getElementById('view-profile-pic');
+            if (data.profilePic) {
+                picEl.src = data.profilePic;
+                picEl.classList.remove('hidden');
+            } else {
+                picEl.src = "";
+                picEl.classList.add('hidden');
+            }
+
+            const backdrop = document.getElementById('modal-backdrop');
+            const viewModal = document.getElementById('view-modal');
+            backdrop.classList.remove('hidden'); viewModal.classList.remove('hidden');
+            setTimeout(() => { backdrop.classList.add('backdrop-enter-active'); viewModal.classList.add('modal-enter-active'); }, 10);
+            
+            lucide.createIcons();
+        }
+
+        function filterFamilyById(id, event) {
+            if(event) event.stopPropagation();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+            const data = familyData.nodes.find(n => n.id === id);
+            if (!data) return;
+            filteredRootId = id;
+            clearHighlights(); update();
+        }
+
+        function toggleDeathInputs() {
+            const isAlive = document.getElementById('edit-status').value === "true";
+            const deathInput = document.getElementById('edit-death-wrapper');
+            const hebrewDeathInput = document.getElementById('edit-hebrew-death-wrapper');
+            const hebrewBirthInput = document.getElementById('edit-hebrew-birth-wrapper');
+            
+            if (isAlive) { 
+                deathInput.classList.add('opacity-40', 'pointer-events-none'); 
+                hebrewDeathInput.classList.add('opacity-40', 'pointer-events-none');
+                hebrewBirthInput.classList.remove('opacity-40', 'pointer-events-none');
+                document.getElementById('edit-death').value = ""; 
+                document.getElementById('edit-hebrew-death').value = "";
+            } else { 
+                deathInput.classList.remove('opacity-40', 'pointer-events-none'); 
+                hebrewDeathInput.classList.remove('opacity-40', 'pointer-events-none');
+                hebrewBirthInput.classList.add('opacity-40', 'pointer-events-none');
+                document.getElementById('edit-hebrew-birth').value = "";
+            }
+        }
+
+        function switchToEdit() {
+            if (!currentNode) return;
+            const data = currentNode;
+
+            const viewModal = document.getElementById('view-modal');
+            viewModal.classList.remove('modal-enter-active');
+            setTimeout(() => { viewModal.classList.add('hidden'); }, 300);
+
+            document.getElementById('edit-node-id').value = data.id;
+            document.getElementById('edit-name').value = data.name || '';
+            document.getElementById('edit-prev-name').value = data.previousLastName || '';
+            document.getElementById('edit-birth').value = data.birth || '';
+            document.getElementById('edit-hebrew-birth').value = data.hebrewBirthDate || '';
+            document.getElementById('edit-death').value = data.death || '';
+            document.getElementById('edit-hebrew-death').value = data.hebrewDeathDate || '';
+            document.getElementById('edit-role').value = data.role || '';
+            document.getElementById('edit-gender').value = data.gender || 'neutral';
+            document.getElementById('edit-country').value = data.birthCountry || '';
+            document.getElementById('edit-status').value = data.isAlive ? "true" : "false";
+            document.getElementById('edit-story').value = data.lifeStory || '';
+            
+            document.getElementById('edit-pic-base64').value = data.profilePic || '';
+            const editPicPreview = document.getElementById('edit-pic-preview');
+            const editPicIcon = document.getElementById('edit-pic-icon');
+            if(data.profilePic) {
+                editPicPreview.src = data.profilePic;
+                editPicPreview.classList.remove('hidden');
+                editPicIcon.classList.add('hidden');
+            } else {
+                editPicPreview.src = '';
+                editPicPreview.classList.add('hidden');
+                editPicIcon.classList.remove('hidden');
+            }
+
+            toggleDeathInputs();
+
+            const targetSelect = document.getElementById('add-link-target');
+            targetSelect.innerHTML = '<option value="">בחר ישות...</option>';
+            familyData.nodes.forEach(n => {
+                if(n.id !== currentNode.id) {
+                    const opt = document.createElement('option');
+                    opt.value = n.id; opt.textContent = n.name;
+                    targetSelect.appendChild(opt);
+                }
+            });
+
+            const editModal = document.getElementById('action-modal');
+            editModal.classList.remove('hidden');
+            setTimeout(() => { editModal.classList.add('modal-enter-active'); }, 10);
+        }
+
+        // --- Handle Image Resize and Base64 Conversion ---
+        function handleImageUpload(eventUpload) {
+            const file = eventUpload.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 250;
+                    const MAX_HEIGHT = 250;
+                    let width = img.width;
+                    let height = img.height;
                     
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">תפקיד / תיאור</label>
-                        <input type="text" id="edit-role" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">ארץ לידה</label>
-                        <input type="text" id="edit-country" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                    </div>
+                    if (width > height && width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width; width = MAX_WIDTH;
+                    } else if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height; height = MAX_HEIGHT;
+                    }
+                    
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    document.getElementById('edit-pic-base64').value = dataUrl;
+                    const preview = document.getElementById('edit-pic-preview');
+                    preview.src = dataUrl;
+                    preview.classList.remove('hidden');
+                    document.getElementById('edit-pic-icon').classList.add('hidden');
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
 
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">סטטוס חיים</label>
-                        <select id="edit-status" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white" onchange="toggleDeathInputs()">
-                            <option value="true">חי/ה</option>
-                            <option value="false">נפטר/ה</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">נושא צבע / מין</label>
-                        <select id="edit-gender" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <option value="neutral">ניטרלי (אפור)</option>
-                            <option value="male">זכר (כחול)</option>
-                            <option value="female">נקבה (ורוד)</option>
-                        </select>
-                    </div>
+        // --- Graph Traversals ---
+        function getDescendantIds(nodeId, visited = new Set()) {
+            if (visited.has(nodeId)) return visited;
+            visited.add(nodeId);
+            const childrenIds = familyData.links
+                .filter(l => {
+                    const s = typeof l.source === 'object' ? l.source.id : l.source;
+                    return s === nodeId && (l.type === 'parent' || !l.type);
+                })
+                .map(l => typeof l.target === 'object' ? l.target.id : l.target);
+            childrenIds.forEach(cId => getDescendantIds(cId, visited));
+            return visited;
+        }
 
-                    <div class="col-span-2 sm:col-span-2 mt-2">
-                        <div class="flex items-center gap-4 text-sm font-medium text-slate-600 border-b border-slate-100 pb-2 mb-2">
-                            <i data-lucide="calendar" class="w-4 h-4"></i> תאריכים
+        function getSpouseIds(nodeId) {
+            const spouses = new Set();
+            familyData.links.forEach(l => {
+                if (l.type === 'spouse') {
+                    const s = typeof l.source === 'object' ? l.source.id : l.source;
+                    const t = typeof l.target === 'object' ? l.target.id : l.target;
+                    if (s === nodeId) spouses.add(t);
+                    if (t === nodeId) spouses.add(s);
+                }
+            });
+            return spouses;
+        }
+
+        function highlightDescendants(rootId) {
+            const descIds = getDescendantIds(rootId);
+            g.selectAll(".link").classed("link-dimmed", true).classed("link-highlight", false);
+            g.selectAll(".node").classed("node-dimmed", true);
+
+            g.selectAll(".link").filter(d => {
+                const s = typeof d.source === 'object' ? d.source.id : d.source;
+                return descIds.has(s) && (d.type === 'parent' || !d.type);
+            }).classed("link-dimmed", false).classed("link-highlight", true);
+
+            g.selectAll(".node").filter(d => descIds.has(d.id)).classed("node-dimmed", false);
+        }
+
+        function clearHighlights() {
+            g.selectAll(".link").classed("link-dimmed", false).classed("link-highlight", false);
+            g.selectAll(".node").classed("node-dimmed", false);
+        }
+
+        function resetFilter() { filteredRootId = null; update(); }
+
+        // --- DOM Generators ---
+        function createNodeCard(data) {
+            let colorClasses = "border-slate-200 text-slate-700 bg-white";
+            let iconColor = "text-slate-400 bg-slate-100";
+            if (data.gender === "male") { colorClasses = "border-blue-200 text-blue-900 bg-white"; iconColor = "text-blue-500 bg-blue-50"; }
+            else if (data.gender === "female") { colorClasses = "border-rose-200 text-rose-900 bg-white"; iconColor = "text-rose-500 bg-rose-50"; }
+
+            // Gender Specific Phrasing
+            const isFemale = data.gender === 'female';
+            const bornText = isFemale ? 'נולדה' : 'נולד';
+            const celebrateText = isFemale ? 'חוגגת' : 'חוגג';
+
+            // Birthday Check (Hebrew)
+            let isBirthdayMonth = false;
+            let currentHebMonth = "";
+            if (data.isAlive && data.hebrewBirthDate) {
+                try {
+                    currentHebMonth = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', {month: 'long'}).format(new Date()).replace('מרחשוון', 'חשוון');
+                    const cleanMonth = currentHebMonth.replace(/['׳]/g, '');
+                    const cleanBirth = data.hebrewBirthDate.replace(/['׳]/g, '');
+                    if (cleanBirth.includes(cleanMonth)) {
+                        isBirthdayMonth = true;
+                    }
+                } catch(e) {}
+            }
+
+            if (isBirthdayMonth) {
+                colorClasses = colorClasses.replace("border-slate-200", "border-indigo-400").replace("border-blue-200", "border-indigo-400").replace("border-rose-200", "border-indigo-400");
+                colorClasses += " ring-2 ring-indigo-400 shadow-md shadow-indigo-100";
+            }
+
+            let dateHtml = "";
+            if (data.isAlive) {
+                dateHtml = `<div class="truncate">${data.birth ? `${bornText}: ${data.birth}` : 'שנת לידה לא ידועה'}</div>`;
+                if (data.hebrewBirthDate) {
+                    if (isBirthdayMonth) {
+                        dateHtml += `<div class="text-indigo-600 font-bold bg-indigo-50 inline-flex items-center gap-1 px-1.5 py-0.5 rounded mt-0.5 text-[10px] w-max"><i data-lucide="cake" class="w-3 h-3"></i> ${celebrateText} ב${currentHebMonth}!</div>`;
+                    } else {
+                        dateHtml += `<div class="text-slate-400 text-[10px] mt-0.5 truncate">${data.hebrewBirthDate}</div>`;
+                    }
+                }
+            } else {
+                dateHtml = `
+                    <div class="truncate text-slate-600 font-semibold mt-0.5">${data.birth || '?'} - ${data.death || '?'}</div>
+                `;
+                if (data.hebrewDeathDate) {
+                    dateHtml += `<div class="text-slate-400 text-[10.5px] mt-0.5 truncate">תאריך פטירה: ${data.hebrewDeathDate}</div>`;
+                }
+            }
+
+            const accent = data.gender === 'male' ? 'bg-blue-400' : (data.gender === 'female' ? 'bg-rose-400' : 'bg-slate-400');
+            
+            const picHtml = data.profilePic 
+                ? `<img src="${data.profilePic}" class="w-full h-full object-cover" />`
+                : `<i data-lucide="user" class="w-5 h-5"></i>`;
+
+            return `
+                <div class="node-card border-2 ${colorClasses} rounded-xl h-full w-full flex items-center p-3 relative bg-white">
+                    <div class="absolute right-0 top-0 bottom-0 w-1.5 ${accent} rounded-r-xl"></div>
+                    <div class="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center mr-2 ml-3 ${iconColor} overflow-hidden border border-slate-100">
+                        ${picHtml}
+                    </div>
+                    <div class="flex-1 overflow-hidden pl-7">
+                        <div class="font-bold text-sm truncate">${data.name || 'ללא שם'}</div>
+                        <div class="text-[11px] opacity-80 truncate mb-1">${data.role || 'ישות'}</div>
+                        <div class="text-xs text-slate-500 leading-snug flex flex-col justify-center">
+                            ${dateHtml}
                         </div>
                     </div>
-
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת לידה</label>
-                        <input type="text" id="edit-birth" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                    </div>
-                     <div class="col-span-2 sm:col-span-1" id="edit-hebrew-birth-wrapper">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">תאריך לידה עברי</label>
-                        <input type="text" id="edit-hebrew-birth" placeholder="למשל: כ''ה בתשרי ה'תש''מ" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                    </div>
-                    <div class="col-span-2 sm:col-span-1" id="edit-death-wrapper">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת פטירה</label>
-                        <input type="text" id="edit-death" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                    </div>
-                    <div class="col-span-2 sm:col-span-1" id="edit-hebrew-death-wrapper">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">תאריך פטירה עברי</label>
-                        <input type="text" id="edit-hebrew-death" placeholder="למשל: י' באב" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                    </div>
-
-                    <div class="col-span-2 mt-2">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">סיפור חיים / הערות</label>
-                        <textarea id="edit-story" rows="3" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50"></textarea>
-                    </div>
+                    <!-- Info Icon -->
+                    <button onclick="showNodeDetailsById('${data.id}', event)" onmousedown="event.stopPropagation()" class="absolute top-2.5 left-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 bg-white/80 rounded-full p-1 transition-colors z-20" title="הצג פרטים מלאים">
+                        <i data-lucide="info" class="w-[18px] h-[18px]"></i>
+                    </button>
                 </div>
+            `;
+        }
+
+        function createActionBubbles(data) {
+            return `
+                <div style="direction: ltr;" class="relative w-full h-full pointer-events-none">
+                    <svg class="absolute top-0 left-0 w-full h-full overflow-visible pointer-events-none -z-10">
+                        <path d="M 0 80 C 25 80, 25 40, 50 40" stroke="#94a3b8" stroke-width="2" fill="none" />
+                        <path d="M 0 80 C 25 80, 25 120, 50 120" stroke="#94a3b8" stroke-width="2" fill="none" />
+                    </svg>
                     
-                <!-- Link logic -->
-                <div class="pt-5 mt-5 border-t border-slate-100">
-                    <label class="block text-sm font-medium text-slate-600 mb-2">הוסף קשר לישות קיימת</label>
-                    <div class="flex gap-2">
-                        <select id="add-link-type" class="w-1/3 px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <option value="parent">הורה שלי</option>
-                            <option value="spouse">בן/בת זוג</option>
-                        </select>
-                        <select id="add-link-target" class="flex-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <option value="">בחר ישות...</option>
-                        </select>
-                        <button onclick="addLink()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium whitespace-nowrap transition-colors">
-                            קשר
+                    <div class="absolute left-[26px] top-[16px] flex items-center pointer-events-auto z-10">
+                        <button onclick="showNodeDetailsById('${data.id}', event)" title="הצג פרטים" class="w-12 h-12 rounded-full bg-white border-2 border-indigo-500 text-indigo-600 flex items-center justify-center hover:bg-indigo-50 shadow-md transition-all transform hover:scale-110">
+                            <i data-lucide="info" class="w-5 h-5"></i>
                         </button>
+                        <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">פרטים</span>
+                    </div>
+
+                    <div class="absolute left-[26px] top-[96px] flex items-center pointer-events-auto z-10">
+                        <button onclick="filterFamilyById('${data.id}', event)" title="הצג משפחה" class="w-12 h-12 rounded-full bg-white border-2 border-emerald-500 text-emerald-600 flex items-center justify-center hover:bg-emerald-50 shadow-md transition-all transform hover:scale-110">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                        </button>
+                        <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">משפחה</span>
                     </div>
                 </div>
-            </div>
+            `;
+        }
 
-            <div class="p-5 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex flex-wrap gap-3 justify-between items-center shrink-0">
-                <button onclick="deleteNode()" id="btn-delete" class="px-4 py-2.5 text-red-600 hover:bg-red-100 rounded-xl text-sm font-medium transition-colors">
-                    מחק ישות
-                </button>
-                <div class="flex gap-2">
-                    <button onclick="addChild()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-medium shadow-sm transition-all transform hover:scale-105">
-                        הוסף ילד
-                    </button>
-                    <button onclick="saveNode()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium shadow-sm transition-all transform hover:scale-105">
-                        שמור שינויים
-                    </button>
-                </div>
-            </div>
-        </div>
+        // --- Drag Behavior ---
+        function dragstarted(event, d) {
+            d3.select(event.currentTarget).raise(); 
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x; d.fy = d.y;
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+        }
+        function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null; d.fy = null;
+        }
 
-        <!-- Share/Send Updates Modal -->
-        <div id="share-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col">
-            <div class="flex items-center justify-between p-5 border-b border-slate-100 bg-emerald-50 rounded-t-2xl shrink-0">
-                <h3 class="text-lg font-semibold text-emerald-900 flex items-center gap-2">
-                    <i data-lucide="send" class="w-5 h-5 text-emerald-600"></i>
-                    שליחת עדכון למנהל
-                </h3>
-                <button onclick="closeModal()" class="text-emerald-400 hover:text-emerald-600 p-1.5 rounded-lg hover:bg-emerald-100 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+        // --- Core CRUD ---
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const editModal = document.getElementById('action-modal');
+            const viewModal = document.getElementById('view-modal');
+
+            backdrop.classList.remove('backdrop-enter-active'); 
+            editModal.classList.remove('modal-enter-active');
+            viewModal.classList.remove('modal-enter-active');
+
+            setTimeout(() => { 
+                backdrop.classList.add('hidden'); 
+                editModal.classList.add('hidden'); 
+                viewModal.classList.add('hidden');
+                currentNode = null; 
+            }, 300);
+        }
+
+        function saveNode() {
+            if (!currentNode) return;
+            const node = familyData.nodes.find(n => n.id === currentNode.id);
+            if (node) {
+                node.name = document.getElementById('edit-name').value;
+                node.previousLastName = document.getElementById('edit-prev-name').value;
+                node.birth = document.getElementById('edit-birth').value;
+                node.hebrewBirthDate = document.getElementById('edit-hebrew-birth').value;
+                node.isAlive = document.getElementById('edit-status').value === "true";
+                node.death = node.isAlive ? "" : document.getElementById('edit-death').value;
+                node.hebrewDeathDate = node.isAlive ? "" : document.getElementById('edit-hebrew-death').value;
+                node.role = document.getElementById('edit-role').value;
+                node.gender = document.getElementById('edit-gender').value;
+                node.birthCountry = document.getElementById('edit-country').value;
+                node.lifeStory = document.getElementById('edit-story').value;
+                node.profilePic = document.getElementById('edit-pic-base64').value;
+            }
+            resetFilter(); closeModal();
+        }
+
+        function addChild() {
+            if (!currentNode) return;
+            const newId = Date.now().toString();
+            const childLevel = (currentNode.level || 0) + 1;
             
-            <div class="p-6">
-                <!-- Initial Form State -->
-                <div id="share-form-state" class="space-y-4">
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        ביצעת שינויים בעץ? מצוין! הזן את שמך למטה ולחץ על שליחה. המידע יישלח ישירות למנהל העץ לעדכון קבוע.
-                    </p>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">השם שלך</label>
+            const newNode = { 
+                id: newId, name: "ישות חדשה", previousLastName: "", role: "ילד", 
+                birth: "", hebrewBirthDate: "", death: "", hebrewDeathDate: "", isAlive: true, gender: "neutral", 
+                birthCountry: "", lifeStory: "", profilePic: "", level: childLevel 
+            };
+            newNode.x = currentNode.x || (window.innerWidth / 2);
+            newNode.y = (currentNode.y || 150) + 200;
+            
+            familyData.nodes.push(newNode);
+            familyData.links.push({ source: currentNode.id, target: newId, type: "parent" });
+            
+            resetFilter(); closeModal();
+        }
+
+        function addLink() {
+            if (!currentNode) return;
+            const targetId = document.getElementById('add-link-target').value;
+            const linkType = document.getElementById('add-link-type').value;
+            if (!targetId) return;
+
+            const exists = familyData.links.some(l => 
+                ((typeof l.source === 'object' ? l.source.id === targetId : l.source === targetId) && 
+                 (typeof l.target === 'object' ? l.target.id === currentNode.id : l.target === currentNode.id)) ||
+                ((typeof l.source === 'object' ? l.source.id === currentNode.id : l.source === currentNode.id) && 
+                 (typeof l.target === 'object' ? l.target.id === targetId : l.target === targetId))
+            );
+
+            if (!exists) {
+                if (linkType === 'parent') {
+                    familyData.links.push({ source: targetId, target: currentNode.id, type: linkType });
+                } else {
+                    familyData.links.push({ source: currentNode.id, target: targetId, type: linkType });
+                }
+                resetFilter(); alert('הקשר נוצר בהצלחה!');
+            } else { alert('כבר קיים קשר בין ישויות אלו.'); }
+        }
+
+        function deleteNode() {
+            if (!currentNode) return;
+            if (confirm(`למחוק את ${currentNode.name}?`)) {
+                familyData.nodes = familyData.nodes.filter(n => n.id !== currentNode.id);
+                familyData.links = familyData.links.filter(l => {
+                    const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+                    const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+                    return sourceId !== currentNode.id && targetId !== currentNode.id;
+                });
+                resetFilter(); closeModal();
+            }
+        }
+
+        function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.3); }
+        function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 0.7); }
+        function resetZoom() { svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(window.innerWidth / 2, 50).scale(1)); }
+        
+        function getCleanDataString() {
+            const cleanData = {
+                nodes: familyData.nodes.map(n => ({ 
+                    id: n.id, name: n.name, previousLastName: n.previousLastName || "", 
+                    role: n.role, birth: n.birth, hebrewBirthDate: n.hebrewBirthDate || "", death: n.death, hebrewDeathDate: n.hebrewDeathDate || "", 
+                    isAlive: n.isAlive, gender: n.gender, birthCountry: n.birthCountry || "", 
+                    lifeStory: n.lifeStory || "", profilePic: n.profilePic || "", 
+                    level: n.level || 0 
+                })),
+                links: familyData.links.map(l => ({
+                    source: typeof l.source === 'object' ? l.source.id : l.source,
+                    target: typeof l.target === 'object' ? l.target.id : l.target,
+                    type: l.type || "parent"
+                }))
+            };
+            return JSON.stringify(cleanData, null, 4);
+        }
+
+        function exportHTML() {
+            resetFilter(); // Clean filters before export
+            clearHighlights();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+
+            const clone = document.documentElement.cloneNode(true);
+            const canvas = clone.querySelector("#tree-canvas");
+            if (canvas) { canvas.innerHTML = ''; canvas.removeAttribute("data-centered"); }
+            
+            const backdrop = clone.querySelector("#modal-backdrop");
+            const actionModal = clone.querySelector("#action-modal");
+            const viewModal = clone.querySelector("#view-modal");
+            
+            if (backdrop) backdrop.className = "fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden backdrop-enter";
+            if (actionModal) actionModal.className = "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[95vh]";
+            if (viewModal) viewModal.className = "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[90vh]";
+            
+            let htmlContent = "<!DOCTYPE html>\n" + clone.outerHTML;
+            
+            // Regex to inject the updated data safely
+            const regex = /(let\s+familyData\s*=\s*)\{[\s\S]*?\};/;
+            htmlContent = htmlContent.replace(regex, `$1${getCleanDataString()};`);
+            
+            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const dl = document.createElement("a");
+            dl.setAttribute("href", url);
+            dl.setAttribute("download", "family_graph_updated.html");
+            document.body.appendChild(dl);
+            dl.click();
+            document.body.removeChild(dl);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
