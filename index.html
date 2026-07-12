@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
-<html lang="he" dir="rtl"><head>
+<html lang="he" dir="rtl">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Family Graph</title>
     
-    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -42,17 +43,39 @@
         textarea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         textarea::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.pointer-events-auto{pointer-events:auto}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.left-1\/2{left:50%}.left-6{left:1.5rem}.right-6{right:1.5rem}.top-1\/2{top:50%}.top-6{top:1.5rem}.bottom-0{bottom:0px}.left-0{left:0px}.left-2\.5{left:0.625rem}.left-\[26px\]{left:26px}.right-0{right:0px}.top-0{top:0px}.top-2\.5{top:0.625rem}.top-\[16px\]{top:16px}.top-\[96px\]{top:96px}.z-0{z-index:0}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.-z-10{z-index:-10}.z-20{z-index:20}.col-span-2{grid-column:span 2 / span 2}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-2{margin-top:0.5rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.ml-2{margin-left:0.5rem}.ml-3{margin-left:0.75rem}.mr-2{margin-right:0.5rem}.mt-0\.5{margin-top:0.125rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-12{height:3rem}.h-24{height:6rem}.h-28{height:7rem}.h-3{height:0.75rem}.h-3\.5{height:0.875rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-8{height:2rem}.h-full{height:100%}.h-\[18px\]{height:18px}.max-h-\[90vh\]{max-height:90vh}.max-h-\[95vh\]{max-height:95vh}.w-1\/3{width:33.333333%}.w-12{width:3rem}.w-24{width:6rem}.w-28{width:7rem}.w-3{width:0.75rem}.w-3\.5{width:0.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-8{width:2rem}.w-full{width:100%}.w-px{width:1px}.w-1\.5{width:0.375rem}.w-\[18px\]{width:18px}.w-max{width:max-content}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.overflow-hidden{overflow:hidden}.overflow-visible{overflow:visible}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.rounded-b-2xl{border-bottom-right-radius:1rem;border-bottom-left-radius:1rem}.rounded-t-2xl{border-top-left-radius:1rem;border-top-right-radius:1rem}.rounded-r-xl{border-top-right-radius:0.75rem;border-bottom-right-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-emerald-100{--tw-border-opacity:1;border-color:rgb(209 250 229 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-blue-200{--tw-border-opacity:1;border-color:rgb(191 219 254 / var(--tw-border-opacity, 1))}.border-emerald-500{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.border-indigo-500{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.border-rose-200{--tw-border-opacity:1;border-color:rgb(254 205 211 / var(--tw-border-opacity, 1))}.border-indigo-400{--tw-border-opacity:1;border-color:rgb(129 140 248 / var(--tw-border-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900\/40{background-color:rgb(15 23 42 / 0.4)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-blue-400{--tw-bg-opacity:1;background-color:rgb(96 165 250 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-rose-400{--tw-bg-opacity:1;background-color:rgb(251 113 133 / var(--tw-bg-opacity, 1))}.bg-rose-50{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.bg-slate-400{--tw-bg-opacity:1;background-color:rgb(148 163 184 / var(--tw-bg-opacity, 1))}.object-cover{object-fit:cover}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-1{padding:0.25rem}.p-3{padding:0.75rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.pb-2{padding-bottom:0.5rem}.pt-5{padding-top:1.25rem}.pl-7{padding-left:1.75rem}.text-center{text-align:center}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-indigo-400{--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-indigo-900{--tw-text-opacity:1;color:rgb(49 46 129 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-rose-500{--tw-text-opacity:1;color:rgb(244 63 94 / var(--tw-text-opacity, 1))}.text-rose-900{--tw-text-opacity:1;color:rgb(136 19 55 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-80{opacity:0.8}.opacity-40{opacity:0.4}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-indigo-100{--tw-shadow-color:#e0e7ff;--tw-shadow:var(--tw-shadow-colored)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-indigo-400{--tw-ring-opacity:1;--tw-ring-color:rgb(129 140 248 / var(--tw-ring-opacity, 1))}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-110:hover{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-emerald-600:hover{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-100:hover{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-50:hover{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-red-100:hover{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-50:hover{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.hover\:text-indigo-600:hover{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-indigo-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(99 102 241 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:col-span-1{grid-column:span 1 / span 1}.sm\:col-span-2{grid-column:span 2 / span 2}}</style></head>
+</head>
 <body class="text-slate-800 antialiased">
 
-    <!-- Error Screen -->
     <div id="error-screen" style="display: none; padding: 40px; color: red; text-align: center; direction: ltr; position: relative; z-index: 999;">
         <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">🚨 JavaScript Error Detected</h1>
         <p id="error-message" style="font-family: monospace; background: #fee2e2; padding: 15px; border-radius: 8px;"></p>
         <p style="margin-top: 20px; color: #333;">Press <strong>F12</strong> to open the browser console for more details.</p>
     </div>
 
-    <div id="app-container">
+    <!-- Application Loader / Connection status overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex flex-col items-center justify-center text-white p-6">
+        <div id="loader-spinner" class="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <h3 id="loader-title" class="text-2xl font-bold mb-2">מתחבר למסד הנתונים...</h3>
+        <p id="loader-subtitle" class="text-slate-300 text-sm max-w-sm text-center leading-relaxed">אנא המתן בזמן שאנו מושכים את נתוני עץ המשפחה ישירות מתוך ה-Google Sheet שלך.</p>
+        
+        <!-- Setup Guide shown if API_URL is blank -->
+        <div id="setup-instructions" class="hidden max-w-md bg-white text-slate-800 p-6 rounded-2xl shadow-2xl mt-4 space-y-4">
+            <h4 class="text-lg font-bold text-slate-900 border-b pb-2 flex items-center gap-2">
+                <i data-lucide="help-circle" class="text-indigo-600 w-5 h-5"></i>
+                אינטגרציה עם Google Sheets
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                כדי להשתמש ב-Google Sheets כמסד הנתונים, עליך להקים Google Apps Script ולהדביק את הכתובת שקיבלת תחת המשתנה <code class="bg-slate-100 text-rose-600 px-1 py-0.5 rounded">API_URL</code> בקוד המקור.
+            </p>
+            <div class="flex gap-2">
+                <button onclick="enterDemoMode()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all">
+                    המשך במצב הדגמה (Demo)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container" class="opacity-0 transition-opacity duration-500">
         <!-- SVG Canvas Background (click to reset filters) -->
         <svg class="absolute inset-0 z-0 pointer-events-none" width="100%" height="100%">
             <defs>
@@ -66,34 +89,43 @@
         <!-- Top Right Controls -->
         <div class="absolute top-6 right-6 z-10 flex gap-3">
             <div class="bg-white/80 backdrop-blur-md p-2 rounded-xl shadow-sm border border-slate-200 flex items-center gap-2">
-                <button onclick="zoomIn()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600" title="התקרב">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-in" aria-hidden="true" class="lucide lucide-zoom-in w-5 h-5"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="11" x2="11" y1="8" y2="14"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
+                <button onclick="zoomIn()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                    <i data-lucide="zoom-in" class="w-5 h-5"></i>
                 </button>
                 <div class="w-px h-6 bg-slate-200"></div>
-                <button onclick="zoomOut()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600" title="התרחק">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-out" aria-hidden="true" class="lucide lucide-zoom-out w-5 h-5"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
+                <button onclick="zoomOut()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                    <i data-lucide="zoom-out" class="w-5 h-5"></i>
                 </button>
                 <div class="w-px h-6 bg-slate-200"></div>
-                <button onclick="resetZoom()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600" title="מרכז תצוגה">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="focus" aria-hidden="true" class="lucide lucide-focus w-5 h-5"><circle cx="12" cy="12" r="3"></circle><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg>
+                <button onclick="resetZoom()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                    <i data-lucide="focus" class="w-5 h-5"></i>
                 </button>
+            </div>
+            <!-- Indicator badge if running in Demo Mode -->
+            <div id="demo-badge" class="hidden bg-amber-50 border border-amber-200 text-amber-800 px-4 py-2 rounded-xl shadow-sm text-sm font-semibold items-center gap-1.5 backdrop-blur-md">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 pointer-events-none"></i>
+                מצב הדגמה (ללא שמירה בענן)
             </div>
         </div>
 
         <!-- Top Left Controls -->
         <div class="absolute top-6 left-6 z-10 flex gap-3">
             <button id="btn-reset-filter" onclick="resetFilter()" class="hidden bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl shadow-md transition-all font-medium flex items-center gap-2 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="refresh-cw" aria-hidden="true" class="lucide lucide-refresh-cw w-4 h-4"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                <i data-lucide="refresh-cw" class="w-4 h-4 pointer-events-none"></i>
                 הצג הכל
             </button>
-            <button onclick="exportHTML()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-md transition-all font-medium flex items-center gap-2 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="download" aria-hidden="true" class="lucide lucide-download w-4 h-4"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg>
-                שמור מודל מעודכן
+            <!-- Single Settings gear button replacing direct action buttons -->
+            <button onclick="handleSettingsClick()" class="bg-slate-800 hover:bg-slate-950 text-white p-3 rounded-xl shadow-md transition-all flex items-center justify-center" title="הגדרות וניהול">
+                <i data-lucide="settings" class="w-5 h-5 pointer-events-none"></i>
             </button>
+            <!-- Badge signaling that Admin/Edit Mode is active -->
+            <div id="admin-badge" class="hidden bg-emerald-500 text-white px-4 py-2.5 rounded-xl shadow-sm text-sm font-bold items-center gap-1.5 backdrop-blur-md animate-pulse">
+                <i data-lucide="unlock" class="w-4 h-4 pointer-events-none"></i>
+                מצב עריכה פעיל
+            </div>
         </div>
 
-        <!-- Main SVG Canvas -->
-        <svg id="tree-canvas" class="relative z-0" width="1514" height="687"></svg>
+        <svg id="tree-canvas" class="relative z-0"></svg>
 
         <!-- Modals Backdrop -->
         <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden backdrop-enter" onclick="closeModal()"></div>
@@ -103,46 +135,46 @@
             <div class="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl shrink-0">
                 <div class="flex items-center gap-2">
                     <button onclick="switchToEdit()" class="text-slate-500 hover:text-indigo-600 bg-white border border-slate-200 shadow-sm p-2 rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105" title="עריכת פרטים והגדרות">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="settings" aria-hidden="true" class="lucide lucide-settings w-5 h-5"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <i data-lucide="settings" class="w-5 h-5 pointer-events-none"></i>
                     </button>
                     <span class="text-xs font-semibold text-slate-400 bg-slate-200 px-2 py-1 rounded-lg">קריאה בלבד</span>
                 </div>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-5 h-5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                    <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
                 </button>
             </div>
             
             <div class="p-6 overflow-y-auto">
                 <div class="text-center mb-6">
-                    <div id="view-icon-bg" class="w-28 h-28 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border-4 border-white overflow-hidden relative bg-slate-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user" aria-hidden="true" id="view-icon-fallback" class="lucide lucide-user w-12 h-12 text-white"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <img id="view-profile-pic" class="w-full h-full object-cover hidden absolute inset-0 z-10" src="">
+                    <div id="view-icon-bg" class="w-28 h-28 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border-4 border-white overflow-hidden relative">
+                        <i id="view-icon-fallback" data-lucide="user" class="w-12 h-12 text-white pointer-events-none"></i>
+                        <img id="view-profile-pic" class="w-full h-full object-cover hidden absolute inset-0 z-10 animate-fade-in" />
                     </div>
-                    <h2 id="view-name" class="text-3xl font-bold text-slate-800 mb-1">ישות חדשה</h2>
+                    <h2 id="view-name" class="text-3xl font-bold text-slate-800 mb-1"></h2>
                     
                     <!-- Unified Dates Display -->
                     <div id="view-dates" class="text-lg font-semibold text-slate-700 mb-2 flex items-center justify-center flex-wrap"></div>
                     
                     <div id="view-prev-name-container" class="text-sm text-slate-500 mb-4 hidden">
-                        שם קודם: <span id="view-prev-name">איזנשטט</span>
+                        שם קודם: <span id="view-prev-name"></span>
                     </div>
                     
                     <div class="flex flex-wrap justify-center gap-2 mb-2">
-                        <span id="view-role" class="text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">ילד</span>
+                        <span id="view-role" class="text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full hidden"></span>
                         
                         <span id="view-descendants" class="text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full hidden flex items-center gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users" aria-hidden="true" class="lucide lucide-users w-3.5 h-3.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                            <i data-lucide="users" class="w-3.5 h-3.5 pointer-events-none"></i>
                             <span id="view-descendants-text"></span>
                         </span>
 
-                        <span id="view-hebrew-date" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1.5 hidden">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" aria-hidden="true" class="lucide lucide-calendar w-3.5 h-3.5"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
-                            <span id="view-hebrew-date-text">כ"ט בתמוז</span>
+                        <span id="view-hebrew-date" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full hidden flex items-center gap-1.5">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5 pointer-events-none"></i>
+                            <span id="view-hebrew-date-text"></span>
                         </span>
 
-                        <span id="view-country" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1 hidden">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="map-pin" aria-hidden="true" class="lucide lucide-map-pin w-3 h-3"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            <span id="view-country-text">ישראל</span>
+                        <span id="view-country" class="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full hidden flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-3 h-3 pointer-events-none"></i>
+                            <span id="view-country-text"></span>
                         </span>
                     </div>
                 </div>
@@ -158,36 +190,35 @@
         <div id="action-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col max-h-[95vh]">
             <div class="flex items-center justify-between p-5 border-b border-slate-100 bg-indigo-50 rounded-t-2xl shrink-0">
                 <h3 class="text-lg font-semibold text-indigo-900 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" class="lucide lucide-edit-3 w-5 h-5 text-indigo-600"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                    <i data-lucide="edit-3" class="w-5 h-5 text-indigo-600 pointer-events-none"></i>
                     עריכת ישות והגדרות
                 </h3>
                 <button onclick="closeModal()" class="text-indigo-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-5 h-5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                    <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
                 </button>
             </div>
             
             <div class="p-6 overflow-y-auto">
-                <input type="hidden" id="edit-node-id" value="1781881656777">
+                <input type="hidden" id="edit-node-id">
                 
                 <!-- Profile Image Upload Area -->
                 <div class="mb-6 flex justify-center">
-                    <div class="relative w-24 h-24 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center hover:bg-slate-200 transition-colors cursor-pointer group" onclick="document.getElementById('edit-pic-upload').click()" title="לחץ להעלאת תמונה">
-                        <img id="edit-pic-preview" class="absolute inset-0 w-full h-full object-cover rounded-full z-10 hidden" src="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" aria-hidden="true" id="edit-pic-icon" class="lucide lucide-camera w-8 h-8 text-slate-400 group-hover:text-slate-500 z-0"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                    <div class="relative w-24 h-24 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center hover:bg-slate-200 transition-colors cursor-pointer group" onclick="document.getElementById('edit-pic-upload').click()">
+                        <img id="edit-pic-preview" class="absolute inset-0 w-full h-full object-cover rounded-full z-10 hidden" />
+                        <i id="edit-pic-icon" data-lucide="camera" class="w-8 h-8 text-slate-400 group-hover:text-slate-500 z-0 pointer-events-none"></i>
                         <input type="file" id="edit-pic-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                        <input type="hidden" id="edit-pic-base64" value="">
+                        <input type="hidden" id="edit-pic-base64">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Column 1 & 2 Full width -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-sm font-medium text-slate-600 mb-1">שם מלא</label>
-                        <input type="text" id="edit-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                        <input type="text" id="edit-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50 animate-fade-in">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-sm font-medium text-slate-600 mb-1">שם משפחה קודם</label>
-                        <input type="text" id="edit-prev-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל: לפני נישואין">
+                        <input type="text" id="edit-prev-name" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל לפני נישואין">
                     </div>
                     
                     <div class="col-span-2 sm:col-span-1">
@@ -217,23 +248,23 @@
 
                     <div class="col-span-2 sm:col-span-2 mt-2">
                         <div class="flex items-center gap-4 text-sm font-medium text-slate-600 border-b border-slate-100 pb-2 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" aria-hidden="true" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg> תאריכים
+                            <i data-lucide="calendar" class="w-4 h-4 pointer-events-none"></i> תאריכים
                         </div>
                     </div>
 
                     <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת לידה (לועזי)</label>
-                        <input type="text" id="edit-birth" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל: 1980">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת לידה</label>
+                        <input type="text" id="edit-birth" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                     </div>
                      <div class="col-span-2 sm:col-span-1" id="edit-hebrew-birth-wrapper">
                         <label class="block text-sm font-medium text-slate-600 mb-1">תאריך לידה עברי</label>
                         <input type="text" id="edit-hebrew-birth" placeholder="למשל: כ''ה בתשרי ה'תש''מ" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                     </div>
-                    <div class="col-span-2 sm:col-span-1 opacity-40 pointer-events-none" id="edit-death-wrapper">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת פטירה (לועזי)</label>
-                        <input type="text" id="edit-death" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50" placeholder="למשל: 2020">
+                    <div class="col-span-2 sm:col-span-1" id="edit-death-wrapper">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">שנת פטירה</label>
+                        <input type="text" id="edit-death" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                     </div>
-                    <div class="col-span-2 sm:col-span-1 opacity-40 pointer-events-none" id="edit-hebrew-death-wrapper">
+                    <div class="col-span-2 sm:col-span-1" id="edit-hebrew-death-wrapper">
                         <label class="block text-sm font-medium text-slate-600 mb-1">תאריך פטירה עברי</label>
                         <input type="text" id="edit-hebrew-death" placeholder="למשל: י' באב" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                     </div>
@@ -252,7 +283,9 @@
                             <option value="parent">הורה שלי</option>
                             <option value="spouse">בן/בת זוג</option>
                         </select>
-                        <select id="add-link-target" class="flex-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white"><option value="">בחר ישות...</option><option value="1">אברהם כהן</option><option value="10">שרה כהן</option><option value="2">דוד כהן</option><option value="3">נחמה אילון</option><option value="4">יוסף כהן</option><option value="5">שירה לוי</option><option value="6">יוסף אילון</option></select>
+                        <select id="add-link-target" class="flex-1 px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 bg-white">
+                            <option value="">בחר ישות...</option>
+                        </select>
                         <button onclick="addLink()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium whitespace-nowrap transition-colors">
                             קשר
                         </button>
@@ -261,7 +294,7 @@
             </div>
 
             <div class="p-5 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex flex-wrap gap-3 justify-between items-center shrink-0">
-                <button onclick="deleteNode()" id="btn-delete" class="px-4 py-2.5 text-red-600 hover:bg-red-100 rounded-xl text-sm font-medium transition-colors">
+                <button onclick="confirmDeleteNode()" id="btn-delete" class="px-4 py-2.5 text-red-600 hover:bg-red-100 rounded-xl text-sm font-medium transition-colors">
                     מחק ישות
                 </button>
                 <div class="flex gap-2">
@@ -274,231 +307,217 @@
                 </div>
             </div>
         </div>
+
+        <!-- Security Passcode Modal -->
+        <div id="passcode-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col p-6">
+            <div class="text-center space-y-4">
+                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto">
+                    <i data-lucide="lock" class="w-6 h-6 pointer-events-none"></i>
+                </div>
+                <h4 class="text-xl font-bold text-slate-900">כניסה למצב עריכה</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    כדי לבצע שינויים, להוסיף ישויות או לסנכרן עם הענן, אנא הזן את קוד הגישה האישי שלך.
+                </p>
+                <div class="pt-2">
+                    <input type="password" id="admin-passcode-input" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-center text-lg font-bold tracking-widest focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50" placeholder="••••">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button onclick="closePasscodeModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition-all">
+                        ביטול
+                    </button>
+                    <button onclick="submitPasscode()" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-md transition-all">
+                        אישור
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Settings Menu Modal (shown when authenticated) -->
+        <div id="settings-menu-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-2xl shadow-2xl z-50 hidden modal-enter flex flex-col p-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <h4 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-indigo-600 pointer-events-none"></i>
+                    לוח ניהול והגדרות
+                </h4>
+                <button onclick="closeSettingsMenuModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
+                </button>
+            </div>
+            <div class="py-4 space-y-3">
+                <button onclick="saveToCloudFromMenu()" id="btn-cloud-save" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="cloud-lightning" class="w-4 h-4 pointer-events-none"></i>
+                    שמור וסנכרן לגוגל שיטס
+                </button>
+                <button onclick="exportHTMLFromMenu()" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="download" class="w-4 h-4 pointer-events-none"></i>
+                    הורד גיבוי (קובץ HTML)
+                </button>
+                <button onclick="logoutAdmin()" class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-rose-600 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="lock" class="w-4 h-4 pointer-events-none"></i>
+                    נעל מצב עריכה
+                </button>
+            </div>
+        </div>
+
+        <!-- Custom Confirmation Dialog (Replaces native browser confirm) -->
+        <div id="confirm-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-2xl shadow-2xl z-[60] hidden modal-enter flex flex-col p-6">
+            <div class="text-center space-y-4">
+                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto">
+                    <i data-lucide="trash-2" class="w-6 h-6 pointer-events-none"></i>
+                </div>
+                <h4 class="text-lg font-bold text-slate-900" id="confirm-title">האם אתה בטוח?</h4>
+                <p class="text-sm text-slate-500 leading-relaxed" id="confirm-body">לא ניתן יהיה לשחזר את הרשומה לאחר המחיקה.</p>
+                <div class="flex gap-3 mt-6">
+                    <button onclick="closeConfirmModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium transition-all">
+                        ביטול
+                    </button>
+                    <button id="btn-approve-confirm" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-medium shadow-sm transition-all">
+                        מחק לצמיתות
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Notification Toast System (Replaces native browser alert) -->
+        <div id="toast-notification" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-[70] hidden flex items-center gap-3 transition-all duration-300 transform translate-y-10 opacity-0">
+            <span id="toast-icon-container" class="rounded-full p-1 bg-white/20"></span>
+            <span id="toast-message" class="text-sm font-medium leading-normal"></span>
+        </div>
     </div>
 
-    <!-- Script Block containing Logic and Database -->
     <script>
         // ==========================================
-        // GRAPH DATABASE MODEL
+        // AUTO-SUBMISSION CONFIGURATION
         // ==========================================
-        let familyData = {
-    "nodes": [
-        {
-            "id": "1",
-            "name": "אברהם כהן",
-            "previousLastName": "",
-            "role": "אב המשפחה",
-            "birth": "1930",
-            "hebrewBirthDate": "",
-            "death": "2010",
-            "hebrewDeathDate": "י' באב",
-            "isAlive": false,
-            "gender": "male",
-            "birthCountry": "מרוקו",
-            "lifeStory": "עלה לארץ בשנת 1950. בנה את ביתו בירושלים והיה ממייסדי הקהילה המקומית.",
-            "profilePic": "",
-            "level": 0
-        },
-        {
-            "id": "10",
-            "name": "שרה כהן",
-            "previousLastName": "לוי",
-            "role": "אם המשפחה",
-            "birth": "1932",
-            "hebrewBirthDate": "",
-            "death": "2015",
-            "hebrewDeathDate": "ג' בחשוון",
-            "isAlive": false,
-            "gender": "female",
-            "birthCountry": "מרוקו",
-            "lifeStory": "",
-            "profilePic": "",
-            "level": 0
-        },
-        {
-            "id": "2",
-            "name": "דוד כהן",
-            "previousLastName": "",
-            "role": "בן",
-            "birth": "1955",
-            "hebrewBirthDate": "א' בניסן ה'תשט\"ו",
-            "death": "",
-            "hebrewDeathDate": "",
-            "isAlive": true,
-            "gender": "male",
-            "birthCountry": "ישראל",
-            "lifeStory": "",
-            "profilePic": "",
-            "level": 1
-        },
-        {
-            "id": "3",
-            "name": "נחמה אילון",
-            "previousLastName": "איזנשטט",
-            "role": "",
-            "birth": "1994",
-            "hebrewBirthDate": "כ\"ט בתמוז",
-            "death": "",
-            "hebrewDeathDate": "",
-            "isAlive": true,
-            "gender": "female",
-            "birthCountry": "ישראל",
-            "lifeStory": "",
-            "profilePic": "",
-            "level": 1
-        },
-        {
-            "id": "4",
-            "name": "יוסף כהן",
-            "previousLastName": "",
-            "role": "נכד",
-            "birth": "1982",
-            "hebrewBirthDate": "",
-            "death": "",
-            "hebrewDeathDate": "",
-            "isAlive": true,
-            "gender": "male",
-            "birthCountry": "ישראל",
-            "lifeStory": "",
-            "profilePic": "",
-            "level": 2
-        },
-        {
-            "id": "5",
-            "name": "שירה לוי",
-            "previousLastName": "כהן",
-            "role": "נכדה",
-            "birth": "1985",
-            "hebrewBirthDate": "",
-            "death": "",
-            "hebrewDeathDate": "",
-            "isAlive": true,
-            "gender": "female",
-            "birthCountry": "ישראל",
-            "lifeStory": "",
-            "profilePic": "",
-            "level": 2
-        },
-        {
-            "id": "6",
-            "name": "יוסף אילון",
-            "previousLastName": "",
-            "role": "",
-            "birth": "1993",
-            "hebrewBirthDate": "ט\"ו בטבת",
-            "death": "",
-            "hebrewDeathDate": "",
-            "isAlive": true,
-            "gender": "male",
-            "birthCountry": "ישראל",
-            "lifeStory": "",
-            "profilePic": "",
-            "level": 1
-        },
-        {
-            "id": "1781881656777",
-            "name": "אסף משה אילון",
-            "previousLastName": "",
-            "role": "",
-            "birth": "",
-            "hebrewBirthDate": "",
-            "death": "",
-            "hebrewDeathDate": "",
-            "isAlive": true,
-            "gender": "male",
-            "birthCountry": "ישראל",
-            "lifeStory": "",
-            "profilePic": "",
-            "level": 2
-        }
-    ],
-    "links": [
-        {
-            "source": "1",
-            "target": "10",
-            "type": "spouse"
-        },
-        {
-            "source": "1",
-            "target": "2",
-            "type": "parent"
-        },
-        {
-            "source": "10",
-            "target": "2",
-            "type": "parent"
-        },
-        {
-            "source": "1",
-            "target": "3",
-            "type": "parent"
-        },
-        {
-            "source": "10",
-            "target": "3",
-            "type": "parent"
-        },
-        {
-            "source": "2",
-            "target": "4",
-            "type": "parent"
-        },
-        {
-            "source": "2",
-            "target": "5",
-            "type": "parent"
-        },
-        {
-            "source": "6",
-            "target": "3",
-            "type": "spouse"
-        },
-        {
-            "source": "3",
-            "target": "1781881656777",
-            "type": "parent"
-        },
-        {
-            "source": "6",
-            "target": "1781881656777",
-            "type": "parent"
-        }
-    ]
-};
+        // Deployed Google Sheets Database Web App URL
+        const API_URL = "https://script.google.com/macros/s/AKfycbz02169Q1eT6-qzlsfaabhLslQiAkR77-ZGck_B6jjCgxRY7ahpog3falSy71hY44tW/exec"; 
+
+        // ==========================================
+        // DEMO GRAPH DATA MODEL (Fallback / Local reference)
+        // ==========================================
+        const demoFamilyData = {
+            "nodes": [
+                { "id": "1", "name": "אברהם כהן", "role": "אב", "birth": "1930", "hebrewBirthDate": "", "death": "2010", "gender": "male", "level": 0, "isAlive": false, "birthCountry": "מרוקו", "previousLastName": "", "lifeStory": "עלה לארץ בשנת 1950. בנה את ביתו בירושלים והיה ממייסדי הקהילה המקומית.", "profilePic": "", "hebrewDeathDate": "י' באב" },
+                { "id": "10", "name": "שרה כהן", "role": "אם", "birth": "1932", "hebrewBirthDate": "", "death": "2015", "gender": "female", "level": 0, "isAlive": false, "birthCountry": "מרוקו", "previousLastName": "לוי", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "ג' בחשוון" },
+                { "id": "2", "name": "דוד כהן", "role": "בן", "birth": "1955", "hebrewBirthDate": "א' בניסן ה'תשט\"ו", "death": "", "gender": "male", "level": 1, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
+                { "id": "3", "name": "רחל ישראלי", "role": "בת", "birth": "1958", "hebrewBirthDate": "ט\"ו בשבט ה'תשי\"ח", "death": "", "gender": "female", "level": 1, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "כהן", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
+                { "id": "4", "name": "יוסף כהן", "role": "נכד", "birth": "1982", "hebrewBirthDate": "", "death": "", "gender": "male", "level": 2, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
+                { "id": "5", "name": "שירה לוי", "role": "נכדה", "birth": "1985", "hebrewBirthDate": "", "death": "", "gender": "female", "level": 2, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "כהן", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" },
+                { "id": "6", "name": "רועי ישראלי", "role": "בעל", "birth": "1956", "hebrewBirthDate": "", "death": "", "gender": "male", "level": 1, "isAlive": true, "birthCountry": "ישראל", "previousLastName": "", "lifeStory": "", "profilePic": "", "hebrewDeathDate": "" }
+            ],
+            "links": [
+                { "source": "1", "target": "10", "type": "spouse" },
+                { "source": "1", "target": "2", "type": "parent" },
+                { "source": "10", "target": "2", "type": "parent" },
+                { "source": "1", "target": "3", "type": "parent" },
+                { "source": "10", "target": "3", "type": "parent" },
+                { "source": "2", "target": "4", "type": "parent" },
+                { "source": "2", "target": "5", "type": "parent" },
+                { "source": "6", "target": "3", "type": "spouse" }
+            ]
+        };
+
+        // Active State Model
+        let familyData = { nodes: [], links: [] };
 
         // ==========================================
         // CORE LOGIC & RENDERING
         // ==========================================
         let svg, g, zoom, simulation;
         
-        // Node dimensions
         const nodeWidth = 230;
         const nodeHeight = 110;
         
         let currentNode = null;
         let filteredRootId = null;
+        let isAdmin = false; // Security gate for modifying data
 
-        try {
-            if (typeof d3 === 'undefined') throw new Error("D3.js library failed to load. Check internet connection.");
-            lucide.createIcons();
+        // --- STREAMING_CHUNK:Loading the window and bindings... ---
+        window.onload = function() {
+            try {
+                if (typeof d3 === 'undefined') throw new Error("D3.js library failed to load. Check internet connection.");
+                lucide.createIcons();
 
-            svg = d3.select("#tree-canvas");
-            g = svg.append("g");
+                svg = d3.select("#tree-canvas");
+                g = svg.append("g");
 
-            svg.on("click", (event) => {
-                if(event.target.tagName === 'svg' || event.target.tagName === 'rect') {
-                    d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
-                    clearHighlights();
-                }
-            });
+                // Only close node action popups if we explicitly click the background SVG or background dot grid
+                svg.on("click", (event) => {
+                    if (event.target === svg.node() || event.target.tagName === 'rect') {
+                        d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+                        clearHighlights();
+                    }
+                });
 
-            zoom = d3.zoom().scaleExtent([0.1, 3]).on("zoom", (event) => {
-                g.attr("transform", event.transform);
-            });
-            svg.call(zoom);
-            svg.attr("width", window.innerWidth).attr("height", window.innerHeight);
+                zoom = d3.zoom().scaleExtent([0.1, 3]).on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+                svg.attr("width", window.innerWidth).attr("height", window.innerHeight);
 
-            // Initial positioning logic
+                // Setup the safe Force Simulation configuration
+                simulation = d3.forceSimulation()
+                    .force("link", d3.forceLink().id(d => d.id).distance(180))
+                    .force("charge", d3.forceManyBody().strength(-600))
+                    .force("collide", d3.forceCollide().radius(nodeWidth * 0.6).iterations(3))
+                    .force("x", d3.forceX(window.innerWidth / 2).strength(0.05))
+                    .force("y", d3.forceY(d => (d.level || 0) * 220 + 150).strength(0.8));
+
+                // Fetch Database Data from Sheets
+                fetchFamilyDatabase();
+
+            } catch (error) {
+                document.getElementById('loading-overlay').style.display = 'none';
+                document.getElementById('app-container').style.display = 'none';
+                document.getElementById('error-screen').style.display = 'block';
+                document.getElementById('error-message').innerText = error.message;
+            }
+        };
+
+        // --- STREAMING_CHUNK:Fetching database from sheets... ---
+        function fetchFamilyDatabase() {
+            if (!API_URL || API_URL.trim() === "") {
+                document.getElementById('loader-spinner').style.display = 'none';
+                document.getElementById('loader-title').innerText = "חיבור ענן לא מוגדר";
+                document.getElementById('loader-subtitle').innerText = "לא נמצאה כתובת API URL מוגדרת בקוד המקור. באפשרותך להתחבר לשרת ענן, או להמשיך להשתמש במידע הדגמה מקומי.";
+                document.getElementById('setup-instructions').classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "new" || !data.nodes || data.nodes.length === 0) {
+                        console.log("Database initialized but empty. Loading demo data structure structure...");
+                        familyData = JSON.parse(JSON.stringify(demoFamilyData));
+                        initializeNodePositions();
+                        saveToCloudSilent();
+                    } else {
+                        familyData = data;
+                        initializeNodePositions();
+                    }
+                    launchApp();
+                })
+                .catch(error => {
+                    console.error("Connection failed:", error);
+                    document.getElementById('loader-spinner').style.display = 'none';
+                    document.getElementById('loader-title').innerText = "שגיאת תקשורת";
+                    document.getElementById('loader-subtitle').innerHTML = `לא הצלחנו למשוך את המידע מגוגל שיטס.<br><br><span class="text-rose-400 text-xs">שגיאה: ${error.toString()}</span>`;
+                    document.getElementById('setup-instructions').classList.remove('hidden');
+                    lucide.createIcons();
+                });
+        }
+
+        function enterDemoMode() {
+            familyData = JSON.parse(JSON.stringify(demoFamilyData));
+            document.getElementById('demo-badge').classList.remove('hidden');
+            document.getElementById('demo-badge').classList.add('flex');
+            initializeNodePositions();
+            launchApp();
+        }
+
+        function initializeNodePositions() {
             familyData.nodes.forEach((n, i) => {
                 if (n.x === undefined || isNaN(n.x)) {
                     n.x = (window.innerWidth / 2) + (Math.random() - 0.5) * 100;
@@ -506,24 +525,79 @@
                 }
                 if(n.isAlive === undefined) n.isAlive = n.death === "";
             });
+        }
 
-            // Physics Engine
-            simulation = d3.forceSimulation()
-                .force("link", d3.forceLink().id(d => d.id).distance(180))
-                .force("charge", d3.forceManyBody().strength(-600))
-                .force("collide", d3.forceCollide().radius(nodeWidth * 0.6).iterations(3))
-                .force("x", d3.forceX(window.innerWidth / 2).strength(0.05))
-                .force("y", d3.forceY(d => (d.level || 0) * 220 + 150).strength(0.8));
+        function launchApp() {
+            const loader = document.getElementById('loading-overlay');
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 500);
+
+            const app = document.getElementById('app-container');
+            app.classList.remove('opacity-0');
 
             update();
             setTimeout(() => resetZoom(), 200);
-
-        } catch (error) {
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('error-screen').style.display = 'block';
-            document.getElementById('error-message').innerText = error.message;
         }
 
+        // Silent Cloud Init
+        function saveToCloudSilent() {
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: getCleanDataString()
+            });
+        }
+
+        // --- STREAMING_CHUNK:Saving state to Google Sheets... ---
+        function saveToCloud() {
+            if(!API_URL) return;
+
+            const saveBtn = document.getElementById('btn-cloud-save');
+            const originalHTML = saveBtn.innerHTML;
+
+            saveBtn.innerHTML = `<svg class="animate-spin h-4 w-4 text-white inline-block pointer-events-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25 pointer-events-none" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75 pointer-events-none" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> שומר...`;
+            saveBtn.classList.add('pointer-events-none', 'opacity-80');
+
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: getCleanDataString()
+            })
+            .then(() => {
+                setTimeout(() => {
+                    saveBtn.innerHTML = `<i data-lucide="check" class="w-4 h-4 pointer-events-none"></i> נשמר בהצלחה!`;
+                    saveBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+                    saveBtn.classList.add('bg-emerald-500');
+                    lucide.createIcons();
+                    
+                    showToast("השינויים נשמרו בהצלחה בגוגל שיטס!");
+                    
+                    setTimeout(() => {
+                        saveBtn.innerHTML = originalHTML;
+                        saveBtn.classList.remove('bg-emerald-500', 'pointer-events-none', 'opacity-80');
+                        saveBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+                        lucide.createIcons();
+                    }, 2000);
+                }, 500);
+            })
+            .catch(error => {
+                console.error("Save failed:", error);
+                saveBtn.innerHTML = `שגיאה בשמירה`;
+                saveBtn.classList.remove('bg-emerald-600');
+                saveBtn.classList.add('bg-rose-600');
+                showToast("נכשלה השמירה לגוגל שיטס.", "error");
+                setTimeout(() => {
+                    saveBtn.innerHTML = originalHTML;
+                    saveBtn.classList.remove('bg-rose-600', 'pointer-events-none', 'opacity-80');
+                    saveBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+                    lucide.createIcons();
+                }, 3000);
+            });
+        }
+
+        // --- STREAMING_CHUNK:Rendering the graph structures... ---
         function update() {
             let displayNodes = familyData.nodes;
             let displayLinks = familyData.links;
@@ -563,6 +637,8 @@
                 .attr("class", "node")
                 .style("opacity", 0)
                 .call(d3.drag()
+                    // Filter drag starting triggers: only drag if starting on the card, not the action bubbles
+                    .filter(event => !event.target.closest('.node-actions'))
                     .on("start", dragstarted)
                     .on("drag", dragged)
                     .on("end", dragended));
@@ -574,16 +650,71 @@
                 .on("mousedown", (event) => { if(event.defaultPrevented) return; })
                 .on("click", handleNodeClick);
 
+            // Large foreignObject bounds to perfectly contain custom absolute positioned actions around the card
             nodeEnter.append("foreignObject")
                 .attr("class", "node-actions")
-                .attr("width", 180).attr("height", 160)
-                .attr("x", 115).attr("y", -80) 
-                .style("opacity", 0).style("pointer-events", "none").style("transition", "opacity 0.2s ease")
-                .html(d => createActionBubbles(d));
+                .attr("width", 440).attr("height", 240)
+                .attr("x", -220).attr("y", -120) 
+                .style("opacity", 0).style("pointer-events", "none").style("transition", "opacity 0.2s ease");
 
             const nodes = nodeEnter.merge(nodeSelection);
             nodes.transition().duration(500).style("opacity", 1);
             nodes.select(".main-card").html(d => createNodeCard(d));
+            
+            // Re-render bubbles and attach highly robust isolated event handlers
+            nodes.select(".node-actions")
+                .html(d => createActionBubbles(d))
+                .each(function(d) {
+                    const sel = d3.select(this);
+                    
+                    sel.select(".action-btn-details")
+                        .on("mousedown", (event) => { event.stopPropagation(); })
+                        .on("touchstart", (event) => { event.stopPropagation(); })
+                        .on("click", (event) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            showNodeDetailsById(d.id, event);
+                        });
+
+                    sel.select(".action-btn-family")
+                        .on("mousedown", (event) => { event.stopPropagation(); })
+                        .on("touchstart", (event) => { event.stopPropagation(); })
+                        .on("click", (event) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            filterFamilyById(d.id, event);
+                        });
+
+                    if (isAdmin) {
+                        sel.select(".action-btn-add-parent")
+                            .on("mousedown", (event) => { event.stopPropagation(); })
+                            .on("touchstart", (event) => { event.stopPropagation(); })
+                            .on("click", (event) => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                addParentDirect(d.id);
+                            });
+
+                        sel.select(".action-btn-add-child")
+                            .on("mousedown", (event) => { event.stopPropagation(); })
+                            .on("touchstart", (event) => { event.stopPropagation(); })
+                            .on("click", (event) => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                addChildDirect(d.id);
+                            });
+
+                        sel.select(".action-btn-add-spouse")
+                            .on("mousedown", (event) => { event.stopPropagation(); })
+                            .on("touchstart", (event) => { event.stopPropagation(); })
+                            .on("click", (event) => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                addSpouseDirect(d.id);
+                            });
+                    }
+                });
+
             nodeSelection.exit().remove();
 
             simulation.nodes(displayNodes).on("tick", () => {
@@ -604,7 +735,7 @@
             lucide.createIcons();
         }
 
-        // --- Interaction Logic ---
+        // --- STREAMING_CHUNK:Handling interactions and animations... ---
         function handleNodeClick(event, d) {
             if (event.defaultPrevented) return;
             event.stopPropagation();
@@ -618,14 +749,17 @@
         }
 
         function showNodeDetailsById(id, event) {
-            if(event) event.stopPropagation();
+            if(event && typeof event.stopPropagation === 'function') {
+                event.stopPropagation();
+                event.preventDefault();
+            }
             d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
             
             const data = familyData.nodes.find(n => n.id === id);
             if (!data) return;
             currentNode = data;
 
-            // Gender Specific Phrasing
+            // Generate gender specific wording
             const isFemale = data.gender === 'female';
             const bornText = isFemale ? 'נולדה' : 'נולד';
 
@@ -637,7 +771,7 @@
             if (data.isAlive) {
                 datesEl.innerText = data.birth ? `${bornText}: ${data.birth}` : "";
             } else {
-                datesEl.innerText = `${data.birth || '?'} - ${data.death || '?'}`;
+                datesEl.innerHTML = `<span class="text-slate-500 text-sm">נולד/ה:</span> ${data.birth || '?'} <span class="mx-2 text-slate-300">|</span> <span class="text-slate-500 text-sm">תאריך פטירה:</span> ${data.death || '?'}`;
             }
             
             const prevNameEl = document.getElementById('view-prev-name-container');
@@ -668,11 +802,11 @@
                 hebrewDateEl.classList.add('hidden');
             }
 
-            // Descendants Count
+            // Descendants Count (Displays in details view)
             const descCount = getDescendantIds(data.id).size - 1;
             const descEl = document.getElementById('view-descendants');
             if (descCount > 0) {
-                document.getElementById('view-descendants-text').innerText = `${descCount} צאצאים`;
+                document.getElementById('view-descendants-text').innerText = `${descCount} צาצאים`;
                 descEl.classList.remove('hidden');
             } else {
                 descEl.classList.add('hidden');
@@ -708,7 +842,10 @@
         }
 
         function filterFamilyById(id, event) {
-            if(event) event.stopPropagation();
+            if(event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
             d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
             const data = familyData.nodes.find(n => n.id === id);
             if (!data) return;
@@ -739,6 +876,12 @@
         function switchToEdit() {
             if (!currentNode) return;
             const data = currentNode;
+
+            // Admin lock verification
+            if (!isAdmin) {
+                openPasscodeModal(() => switchToEdit());
+                return;
+            }
 
             const viewModal = document.getElementById('view-modal');
             viewModal.classList.remove('modal-enter-active');
@@ -787,9 +930,9 @@
             setTimeout(() => { editModal.classList.add('modal-enter-active'); }, 10);
         }
 
-        // --- Handle Image Resize and Base64 Conversion ---
-        function handleImageUpload(eventUpload) {
-            const file = eventUpload.target.files[0];
+        // --- STREAMING_CHUNK:Image compression & uploads... ---
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
             if (!file) return;
             
             const reader = new FileReader();
@@ -825,7 +968,7 @@
             reader.readAsDataURL(file);
         }
 
-        // --- Graph Traversals ---
+        // --- STREAMING_CHUNK:Traversing graph nodes... ---
         function getDescendantIds(nodeId, visited = new Set()) {
             if (visited.has(nodeId)) return visited;
             visited.add(nodeId);
@@ -870,9 +1013,419 @@
             g.selectAll(".node").classed("node-dimmed", false);
         }
 
-        function resetFilter() { filteredRootId = null; update(); }
+        // --- STREAMING_CHUNK:Handling Custom Dialog UI... ---
+        function showToast(message, type = "success") {
+            const toast = document.getElementById("toast-notification");
+            const iconContainer = document.getElementById("toast-icon-container");
+            const messageEl = document.getElementById("toast-message");
 
-        // --- DOM Generators ---
+            messageEl.innerText = message;
+            
+            if (type === "success") {
+                toast.className = "fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-[70] flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 border-l-4 border-emerald-500";
+                iconContainer.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400 pointer-events-none"></i>`;
+            } else {
+                toast.className = "fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-[70] flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 border-l-4 border-rose-500";
+                iconContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 pointer-events-none"></i>`;
+            }
+
+            lucide.createIcons();
+
+            if (toast.timeoutId) clearTimeout(toast.timeoutId);
+
+            toast.timeoutId = setTimeout(() => {
+                toast.classList.add("translate-y-10", "opacity-0");
+                setTimeout(() => { toast.classList.add("hidden"); }, 300);
+            }, 3500);
+
+            toast.classList.remove("hidden");
+        }
+
+        let onConfirmApprove = null;
+
+        function showConfirm(title, body, onApprove) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-body').innerText = body;
+            onConfirmApprove = onApprove;
+
+            const backdrop = document.getElementById('modal-backdrop');
+            const confirmModal = document.getElementById('confirm-modal');
+            
+            backdrop.classList.remove('hidden');
+            confirmModal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                backdrop.classList.add('backdrop-enter-active');
+                confirmModal.classList.add('modal-enter-active');
+            }, 10);
+
+            document.getElementById('btn-approve-confirm').onclick = function() {
+                if(onConfirmApprove) onConfirmApprove();
+                closeConfirmModal();
+            };
+        }
+
+        function closeConfirmModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const confirmModal = document.getElementById('confirm-modal');
+
+            backdrop.classList.remove('backdrop-enter-active');
+            confirmModal.classList.remove('modal-enter-active');
+
+            setTimeout(() => {
+                confirmModal.classList.add('hidden');
+                if(document.getElementById('action-modal').classList.contains('hidden') && 
+                   document.getElementById('view-modal').classList.contains('hidden')) {
+                    backdrop.classList.add('hidden');
+                }
+                onConfirmApprove = null;
+            }, 300);
+        }
+
+        // --- STREAMING_CHUNK:Security & Passcode Flow... ---
+        let passcodeCallback = null;
+
+        function handleSettingsClick() {
+            if (isAdmin) {
+                openSettingsMenuModal();
+            } else {
+                openPasscodeModal(() => openSettingsMenuModal());
+            }
+        }
+
+        function openPasscodeModal(callback = null) {
+            passcodeCallback = callback;
+            document.getElementById('admin-passcode-input').value = "";
+            
+            const backdrop = document.getElementById('modal-backdrop');
+            const passcodeModal = document.getElementById('passcode-modal');
+            
+            backdrop.classList.remove('hidden');
+            passcodeModal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                backdrop.classList.add('backdrop-enter-active');
+                passcodeModal.classList.add('modal-enter-active');
+                document.getElementById('admin-passcode-input').focus();
+            }, 10);
+            
+            lucide.createIcons();
+        }
+
+        function closePasscodeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const passcodeModal = document.getElementById('passcode-modal');
+            
+            passcodeModal.classList.remove('modal-enter-active');
+            setTimeout(() => {
+                passcodeModal.classList.add('hidden');
+                if (document.getElementById('action-modal').classList.contains('hidden') && 
+                    document.getElementById('view-modal').classList.contains('hidden')) {
+                    backdrop.classList.add('hidden');
+                }
+                passcodeCallback = null;
+            }, 300);
+        }
+
+        function submitPasscode() {
+            const code = document.getElementById('admin-passcode-input').value;
+            if (code === "Eilon") {
+                isAdmin = true;
+                
+                document.getElementById('admin-badge').classList.remove('hidden');
+                document.getElementById('admin-badge').classList.add('flex');
+                
+                showToast("קוד הגישה אומת. מצב עריכה פתוח כעת!");
+                
+                closePasscodeModal();
+                update(); // Force graph refresh to enable editing action popups
+                
+                if (passcodeCallback) {
+                    const tempCallback = passcodeCallback;
+                    passcodeCallback = null;
+                    tempCallback();
+                }
+            } else {
+                showToast("קוד גישה שגוי.", "error");
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('admin-badge').classList.add('hidden');
+            document.getElementById('admin-badge').classList.remove('flex');
+            closeSettingsMenuModal();
+            update(); // Re-render nodes to standard view mode
+            showToast("נעלת את מצב העריכה בהצלחה.");
+        }
+
+        function openSettingsMenuModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const menuModal = document.getElementById('settings-menu-modal');
+            backdrop.classList.remove('hidden');
+            menuModal.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.add('backdrop-enter-active');
+                menuModal.classList.add('modal-enter-active');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function closeSettingsMenuModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const menuModal = document.getElementById('settings-menu-modal');
+            menuModal.classList.remove('modal-enter-active');
+            setTimeout(() => {
+                menuModal.classList.add('hidden');
+                if (document.getElementById('action-modal').classList.contains('hidden') && 
+                    document.getElementById('view-modal').classList.contains('hidden')) {
+                    backdrop.classList.add('hidden');
+                }
+            }, 300);
+        }
+
+        function saveToCloudFromMenu() {
+            closeSettingsMenuModal();
+            saveToCloud();
+        }
+
+        function exportHTMLFromMenu() {
+            closeSettingsMenuModal();
+            exportHTML();
+        }
+
+        // --- STREAMING_CHUNK:Action Bubbles with Event Isolation... ---
+        function createActionBubbles(data) {
+            if (isAdmin) {
+                // Return full suite of edit popups centered precisely around the card (centered at x: 220, y: 120)
+                return `
+                    <div style="direction: ltr;" class="relative w-full h-full pointer-events-none">
+                        <!-- SVG visual connectors to the action buttons -->
+                        <svg class="absolute top-0 left-0 w-full h-full overflow-visible pointer-events-none -z-10">
+                            <!-- Line up to parent -->
+                            <path d="M 220 120 L 220 40" stroke="#6366f1" stroke-dasharray="3,3" stroke-width="2" fill="none" />
+                            <!-- Line down to child -->
+                            <path d="M 220 120 L 220 200" stroke="#10b981" stroke-dasharray="3,3" stroke-width="2" fill="none" />
+                            <!-- Line left to spouse -->
+                            <path d="M 220 120 L 60 120" stroke="#f43f5e" stroke-dasharray="3,3" stroke-width="2" fill="none" />
+                            <!-- Connectors to standard View details / filter actions on the right -->
+                            <path d="M 220 120 C 300 120, 300 85, 345 85" stroke="#94a3b8" stroke-width="1.5" fill="none" />
+                            <path d="M 220 120 C 300 120, 300 155, 345 155" stroke="#94a3b8" stroke-width="1.5" fill="none" />
+                        </svg>
+                        
+                        <!-- הוסף הורה (מעל) -->
+                        <div class="action-btn-add-parent absolute flex items-center pointer-events-auto z-10 cursor-pointer" style="left: 220px; top: 25px; transform: translate(-50%, -50%);">
+                            <button title="הוסף הורה מעל" class="px-3 py-1.5 rounded-full bg-indigo-600 text-white flex items-center gap-1.5 text-xs font-bold shadow-md hover:bg-indigo-700 transition-all transform hover:scale-105">
+                                <i data-lucide="arrow-up" class="w-3.5 h-3.5 pointer-events-none"></i>
+                                <span>הוסף הורה (מעל)</span>
+                            </button>
+                        </div>
+
+                        <!-- הוסף ילד (מתחת) -->
+                        <div class="action-btn-add-child absolute flex items-center pointer-events-auto z-10 cursor-pointer" style="left: 220px; top: 215px; transform: translate(-50%, -50%);">
+                            <button title="הוסף ילד מתחת" class="px-3 py-1.5 rounded-full bg-emerald-600 text-white flex items-center gap-1.5 text-xs font-bold shadow-md hover:bg-emerald-700 transition-all transform hover:scale-105">
+                                <i data-lucide="arrow-down" class="w-3.5 h-3.5 pointer-events-none"></i>
+                                <span>הוסף ילד (מתחת)</span>
+                            </button>
+                        </div>
+
+                        <!-- הוסף בן זוג (בצד שמאל) -->
+                        <div class="action-btn-add-spouse absolute flex items-center pointer-events-auto z-10 cursor-pointer" style="left: 45px; top: 120px; transform: translate(-50%, -50%);">
+                            <button title="הוסף בן זוג בשמאל" class="px-3 py-1.5 rounded-full bg-rose-500 text-white flex items-center gap-1.5 text-xs font-bold shadow-md hover:bg-rose-600 transition-all transform hover:scale-105">
+                                <i data-lucide="heart" class="w-3.5 h-3.5 pointer-events-none"></i>
+                                <span>הוסף בן זוג (שמאל)</span>
+                            </button>
+                        </div>
+
+                        <!-- Details (ימין למעלה) -->
+                        <div class="action-btn-details absolute flex items-center pointer-events-auto z-10 cursor-pointer hover:opacity-90" style="left: 380px; top: 85px; transform: translate(-50%, -50%);">
+                            <button title="הצג פרטים" class="w-9 h-9 rounded-full bg-white border-2 border-indigo-500 text-indigo-600 flex items-center justify-center hover:bg-indigo-50 shadow-md transition-all transform hover:scale-105">
+                                <i data-lucide="info" class="w-4 h-4 pointer-events-none"></i>
+                            </button>
+                            <span class="ml-1.5 text-xs font-bold text-slate-700 bg-white/90 px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap">פרטים</span>
+                        </div>
+
+                        <!-- Family (ימין למטה) -->
+                        <div class="action-btn-family absolute flex items-center pointer-events-auto z-10 cursor-pointer hover:opacity-90" style="left: 380px; top: 155px; transform: translate(-50%, -50%);">
+                            <button title="הצג משפחה" class="w-9 h-9 rounded-full bg-white border-2 border-emerald-500 text-emerald-600 flex items-center justify-center hover:bg-emerald-50 shadow-md transition-all transform hover:scale-105">
+                                <i data-lucide="users" class="w-4 h-4 pointer-events-none"></i>
+                            </button>
+                            <span class="ml-1.5 text-xs font-bold text-slate-700 bg-white/90 px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap">משפחה</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Return standard view details/family action popups to the right of the card
+                return `
+                    <div style="direction: ltr;" class="relative w-full h-full pointer-events-none">
+                        <svg class="absolute top-0 left-0 w-full h-full overflow-visible pointer-events-none -z-10">
+                            <path d="M 220 120 C 260 120, 260 85, 295 85" stroke="#94a3b8" stroke-width="2" fill="none" />
+                            <path d="M 220 120 C 260 120, 260 155, 295 155" stroke="#94a3b8" stroke-width="2" fill="none" />
+                        </svg>
+                        
+                        <div class="action-btn-details absolute flex items-center pointer-events-auto z-10 cursor-pointer hover:opacity-90" style="left: 330px; top: 85px; transform: translate(-50%, -50%);">
+                            <button title="הצג פרטים" class="w-10 h-10 rounded-full bg-white border-2 border-indigo-500 text-indigo-600 flex items-center justify-center hover:bg-indigo-50 shadow-md transition-all transform hover:scale-105">
+                                <i data-lucide="info" class="w-5 h-5 pointer-events-none"></i>
+                            </button>
+                            <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">פרטים</span>
+                        </div>
+
+                        <div class="action-btn-family absolute flex items-center pointer-events-auto z-10 cursor-pointer hover:opacity-90" style="left: 330px; top: 155px; transform: translate(-50%, -50%);">
+                            <button title="הצג משפחה" class="w-10 h-10 rounded-full bg-white border-2 border-emerald-500 text-emerald-600 flex items-center justify-center hover:bg-emerald-50 shadow-md transition-all transform hover:scale-105">
+                                <i data-lucide="users" class="w-5 h-5 pointer-events-none"></i>
+                            </button>
+                            <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">משפחה</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- STREAMING_CHUNK:Direct Family Adding Operators... ---
+        function addChildDirect(parentId) {
+            const parent = familyData.nodes.find(n => n.id === parentId);
+            if (!parent) return;
+            const newId = Date.now().toString();
+            const childLevel = (parent.level || 0) + 1;
+            
+            const newNode = { 
+                id: newId, name: "ילד/ה חדש/ה", previousLastName: "", role: "ילד", 
+                birth: "", hebrewBirthDate: "", death: "", hebrewDeathDate: "", isAlive: true, gender: "neutral", 
+                birthCountry: "", lifeStory: "", profilePic: "", level: childLevel 
+            };
+            newNode.x = parent.x || (window.innerWidth / 2);
+            newNode.y = (parent.y || 150) + 200;
+            
+            familyData.nodes.push(newNode);
+            familyData.links.push({ source: parentId, target: newId, type: "parent" });
+            
+            currentNode = newNode;
+            resetFilter();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+            switchToEdit();
+            showToast("נוסף/ה ילד/ה בהצלחה! אנא הגדר את פרטיהם.");
+        }
+
+        function addParentDirect(childId) {
+            const child = familyData.nodes.find(n => n.id === childId);
+            if (!child) return;
+            const newId = Date.now().toString();
+            const parentLevel = Math.max(0, (child.level || 0) - 1);
+            
+            const newNode = { 
+                id: newId, name: "הורה חדש/ה", previousLastName: "", role: "הורה", 
+                birth: "", hebrewBirthDate: "", death: "", hebrewDeathDate: "", isAlive: true, gender: "neutral", 
+                birthCountry: "", lifeStory: "", profilePic: "", level: parentLevel 
+            };
+            newNode.x = child.x || (window.innerWidth / 2);
+            newNode.y = Math.max(50, (child.y || 150) - 200);
+            
+            familyData.nodes.push(newNode);
+            familyData.links.push({ source: newId, target: childId, type: "parent" });
+            
+            currentNode = newNode;
+            resetFilter();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+            switchToEdit();
+            showToast("נוסף/ה הורה בהצלחה! אנא הגדר את פרטיהם.");
+        }
+
+        function addSpouseDirect(partnerId) {
+            const partner = familyData.nodes.find(n => n.id === partnerId);
+            if (!partner) return;
+            const newId = Date.now().toString();
+            const spouseLevel = partner.level || 0;
+            
+            const newNode = { 
+                id: newId, name: "בן/בת זוג חדש/ה", previousLastName: "", role: "בן/בת זוג", 
+                birth: "", hebrewBirthDate: "", death: "", hebrewDeathDate: "", isAlive: true, gender: "neutral", 
+                birthCountry: "", lifeStory: "", profilePic: "", level: spouseLevel 
+            };
+            newNode.x = (partner.x || (window.innerWidth / 2)) - 180;
+            newNode.y = partner.y || 150;
+            
+            familyData.nodes.push(newNode);
+            familyData.links.push({ source: partnerId, target: newId, type: "spouse" });
+            
+            currentNode = newNode;
+            resetFilter();
+            d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
+            switchToEdit();
+            showToast("נוסף/ה בן/בת זוג בהצלחה! אנא הגדר את פרטיהם.");
+        }
+
+        // --- STREAMING_CHUNK:Data Model Operations... ---
+        function saveNode() {
+            if (!currentNode) return;
+            const node = familyData.nodes.find(n => n.id === currentNode.id);
+            if (node) {
+                node.name = document.getElementById('edit-name').value;
+                node.previousLastName = document.getElementById('edit-prev-name').value;
+                node.birth = document.getElementById('edit-birth').value;
+                node.hebrewBirthDate = document.getElementById('edit-hebrew-birth').value;
+                node.isAlive = document.getElementById('edit-status').value === "true";
+                node.death = node.isAlive ? "" : document.getElementById('edit-death').value;
+                node.hebrewDeathDate = node.isAlive ? "" : document.getElementById('edit-hebrew-death').value;
+                node.role = document.getElementById('edit-role').value;
+                node.gender = document.getElementById('edit-gender').value;
+                node.birthCountry = document.getElementById('edit-country').value;
+                node.lifeStory = document.getElementById('edit-story').value;
+                node.profilePic = document.getElementById('edit-pic-base64').value;
+            }
+            resetFilter(); closeModal();
+            showToast("הרשומה נשמרה בהצלחה. זכור ללחוץ על 'שמור לגוגל שיטס' כדי לסנכרן לענן!");
+        }
+
+        function addChild() {
+            if (!currentNode) return;
+            addChildDirect(currentNode.id);
+            closeModal();
+        }
+
+        function addLink() {
+            if (!currentNode) return;
+            const targetId = document.getElementById('add-link-target').value;
+            const linkType = document.getElementById('add-link-type').value;
+            if (!targetId) return;
+
+            const exists = familyData.links.some(l => 
+                ((typeof l.source === 'object' ? l.source.id === targetId : l.source === targetId) && 
+                 (typeof l.target === 'object' ? l.target.id === currentNode.id : l.target === currentNode.id)) ||
+                ((typeof l.source === 'object' ? l.source.id === currentNode.id : l.source === currentNode.id) && 
+                 (typeof l.target === 'object' ? l.target.id === targetId : l.target === targetId))
+            );
+
+            if (!exists) {
+                if (linkType === 'parent') {
+                    familyData.links.push({ source: targetId, target: currentNode.id, type: linkType });
+                } else {
+                    familyData.links.push({ source: currentNode.id, target: targetId, type: linkType });
+                }
+                resetFilter(); showToast("הקשר המשפחתי נוצר בהצלחה!");
+            } else { 
+                showToast("כבר קיים קשר בין ישויות אלו.", "error"); 
+            }
+        }
+
+        function confirmDeleteNode() {
+            if (!currentNode) return;
+            showConfirm(
+                `למחוק את ${currentNode.name}?`,
+                "פעולה זו תסיר את הישות מהגרף ותנתק את כל קשריה המשפחתיים.",
+                function() {
+                    familyData.nodes = familyData.nodes.filter(n => n.id !== currentNode.id);
+                    familyData.links = familyData.links.filter(l => {
+                        const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+                        const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+                        return sourceId !== currentNode.id && targetId !== currentNode.id;
+                    });
+                    resetFilter(); closeModal();
+                    showToast("הרשומה נמחקה בהצלחה.");
+                }
+            );
+        }
+
+        // --- STREAMING_CHUNK:Generating HTML Elements & Actions... ---
         function createNodeCard(data) {
             let colorClasses = "border-slate-200 text-slate-700 bg-white";
             let iconColor = "text-slate-400 bg-slate-100";
@@ -884,7 +1437,7 @@
             const bornText = isFemale ? 'נולדה' : 'נולד';
             const celebrateText = isFemale ? 'חוגגת' : 'חוגג';
 
-            // Birthday Check (Hebrew)
+            // Birthday Check (Hebrew Month)
             let isBirthdayMonth = false;
             let currentHebMonth = "";
             if (data.isAlive && data.hebrewBirthDate) {
@@ -908,7 +1461,7 @@
                 dateHtml = `<div class="truncate">${data.birth ? `${bornText}: ${data.birth}` : 'שנת לידה לא ידועה'}</div>`;
                 if (data.hebrewBirthDate) {
                     if (isBirthdayMonth) {
-                        dateHtml += `<div class="text-indigo-600 font-bold bg-indigo-50 inline-flex items-center gap-1 px-1.5 py-0.5 rounded mt-0.5 text-[10px] w-max"><i data-lucide="cake" class="w-3 h-3"></i> ${celebrateText} ב${currentHebMonth}!</div>`;
+                        dateHtml += `<div class="text-indigo-600 font-bold bg-indigo-50 inline-flex items-center gap-1 px-1.5 py-0.5 rounded mt-0.5 text-[10px] w-max"><i data-lucide="cake" class="w-3 h-3 pointer-events-none"></i> ${celebrateText} ב${currentHebMonth}!</div>`;
                     } else {
                         dateHtml += `<div class="text-slate-400 text-[10px] mt-0.5 truncate">${data.hebrewBirthDate}</div>`;
                     }
@@ -926,50 +1479,25 @@
             
             const picHtml = data.profilePic 
                 ? `<img src="${data.profilePic}" class="w-full h-full object-cover" />`
-                : `<i data-lucide="user" class="w-5 h-5"></i>`;
+                : `<i data-lucide="user" class="w-5 h-5 pointer-events-none"></i>`;
 
             return `
                 <div class="node-card border-2 ${colorClasses} rounded-xl h-full w-full flex items-center p-3 relative bg-white">
-                    <div class="absolute right-0 top-0 bottom-0 w-1.5 ${accent} rounded-r-xl"></div>
-                    <div class="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center mr-2 ml-3 ${iconColor} overflow-hidden border border-slate-100">
+                    <div class="absolute right-0 top-0 bottom-0 w-1.5 ${accent} rounded-r-xl pointer-events-none"></div>
+                    <div class="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center mr-2 ml-3 ${iconColor} overflow-hidden border border-slate-100 pointer-events-none">
                         ${picHtml}
                     </div>
-                    <div class="flex-1 overflow-hidden pl-7">
+                    <div class="flex-1 overflow-hidden pl-7 pointer-events-none">
                         <div class="font-bold text-sm truncate">${data.name || 'ללא שם'}</div>
                         <div class="text-[11px] opacity-80 truncate mb-1">${data.role || 'ישות'}</div>
                         <div class="text-xs text-slate-500 leading-snug flex flex-col justify-center">
                             ${dateHtml}
                         </div>
                     </div>
-                    <!-- Info Icon -->
+                    <!-- אייקון מידע -->
                     <button onclick="showNodeDetailsById('${data.id}', event)" onmousedown="event.stopPropagation()" class="absolute top-2.5 left-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 bg-white/80 rounded-full p-1 transition-colors z-20" title="הצג פרטים מלאים">
-                        <i data-lucide="info" class="w-[18px] h-[18px]"></i>
+                        <i data-lucide="info" class="w-[18px] h-[18px] pointer-events-none"></i>
                     </button>
-                </div>
-            `;
-        }
-
-        function createActionBubbles(data) {
-            return `
-                <div style="direction: ltr;" class="relative w-full h-full pointer-events-none">
-                    <svg class="absolute top-0 left-0 w-full h-full overflow-visible pointer-events-none -z-10">
-                        <path d="M 0 80 C 25 80, 25 40, 50 40" stroke="#94a3b8" stroke-width="2" fill="none" />
-                        <path d="M 0 80 C 25 80, 25 120, 50 120" stroke="#94a3b8" stroke-width="2" fill="none" />
-                    </svg>
-                    
-                    <div class="absolute left-[26px] top-[16px] flex items-center pointer-events-auto z-10">
-                        <button onclick="showNodeDetailsById('${data.id}', event)" title="הצג פרטים" class="w-12 h-12 rounded-full bg-white border-2 border-indigo-500 text-indigo-600 flex items-center justify-center hover:bg-indigo-50 shadow-md transition-all transform hover:scale-110">
-                            <i data-lucide="info" class="w-5 h-5"></i>
-                        </button>
-                        <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">פרטים</span>
-                    </div>
-
-                    <div class="absolute left-[26px] top-[96px] flex items-center pointer-events-auto z-10">
-                        <button onclick="filterFamilyById('${data.id}', event)" title="הצג משפחה" class="w-12 h-12 rounded-full bg-white border-2 border-emerald-500 text-emerald-600 flex items-center justify-center hover:bg-emerald-50 shadow-md transition-all transform hover:scale-110">
-                            <i data-lucide="users" class="w-5 h-5"></i>
-                        </button>
-                        <span class="ml-2 text-sm font-bold text-slate-700 bg-white/90 px-2 py-1 rounded shadow-sm whitespace-nowrap">משפחה</span>
-                    </div>
                 </div>
             `;
         }
@@ -981,109 +1509,19 @@
             d.fx = d.x; d.fy = d.y;
             d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
         }
-        function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+        function dragged(event, d) { 
+            d.fx = event.x; 
+            d.fy = event.y; 
+        }
         function dragended(event, d) {
             if (!event.active) simulation.alphaTarget(0);
-            d.fx = null; d.fy = null;
+            d.fx = null; 
+            d.fy = null;
         }
 
-        // --- Core CRUD ---
-        function closeModal() {
-            const backdrop = document.getElementById('modal-backdrop');
-            const editModal = document.getElementById('action-modal');
-            const viewModal = document.getElementById('view-modal');
+        // --- Core CRUD helpers ---
+        function resetFilter() { filteredRootId = null; update(); }
 
-            backdrop.classList.remove('backdrop-enter-active'); 
-            editModal.classList.remove('modal-enter-active');
-            viewModal.classList.remove('modal-enter-active');
-
-            setTimeout(() => { 
-                backdrop.classList.add('hidden'); 
-                editModal.classList.add('hidden'); 
-                viewModal.classList.add('hidden');
-                currentNode = null; 
-            }, 300);
-        }
-
-        function saveNode() {
-            if (!currentNode) return;
-            const node = familyData.nodes.find(n => n.id === currentNode.id);
-            if (node) {
-                node.name = document.getElementById('edit-name').value;
-                node.previousLastName = document.getElementById('edit-prev-name').value;
-                node.birth = document.getElementById('edit-birth').value;
-                node.hebrewBirthDate = document.getElementById('edit-hebrew-birth').value;
-                node.isAlive = document.getElementById('edit-status').value === "true";
-                node.death = node.isAlive ? "" : document.getElementById('edit-death').value;
-                node.hebrewDeathDate = node.isAlive ? "" : document.getElementById('edit-hebrew-death').value;
-                node.role = document.getElementById('edit-role').value;
-                node.gender = document.getElementById('edit-gender').value;
-                node.birthCountry = document.getElementById('edit-country').value;
-                node.lifeStory = document.getElementById('edit-story').value;
-                node.profilePic = document.getElementById('edit-pic-base64').value;
-            }
-            resetFilter(); closeModal();
-        }
-
-        function addChild() {
-            if (!currentNode) return;
-            const newId = Date.now().toString();
-            const childLevel = (currentNode.level || 0) + 1;
-            
-            const newNode = { 
-                id: newId, name: "ישות חדשה", previousLastName: "", role: "ילד", 
-                birth: "", hebrewBirthDate: "", death: "", hebrewDeathDate: "", isAlive: true, gender: "neutral", 
-                birthCountry: "", lifeStory: "", profilePic: "", level: childLevel 
-            };
-            newNode.x = currentNode.x || (window.innerWidth / 2);
-            newNode.y = (currentNode.y || 150) + 200;
-            
-            familyData.nodes.push(newNode);
-            familyData.links.push({ source: currentNode.id, target: newId, type: "parent" });
-            
-            resetFilter(); closeModal();
-        }
-
-        function addLink() {
-            if (!currentNode) return;
-            const targetId = document.getElementById('add-link-target').value;
-            const linkType = document.getElementById('add-link-type').value;
-            if (!targetId) return;
-
-            const exists = familyData.links.some(l => 
-                ((typeof l.source === 'object' ? l.source.id === targetId : l.source === targetId) && 
-                 (typeof l.target === 'object' ? l.target.id === currentNode.id : l.target === currentNode.id)) ||
-                ((typeof l.source === 'object' ? l.source.id === currentNode.id : l.source === currentNode.id) && 
-                 (typeof l.target === 'object' ? l.target.id === targetId : l.target === targetId))
-            );
-
-            if (!exists) {
-                if (linkType === 'parent') {
-                    familyData.links.push({ source: targetId, target: currentNode.id, type: linkType });
-                } else {
-                    familyData.links.push({ source: currentNode.id, target: targetId, type: linkType });
-                }
-                resetFilter(); alert('הקשר נוצר בהצלחה!');
-            } else { alert('כבר קיים קשר בין ישויות אלו.'); }
-        }
-
-        function deleteNode() {
-            if (!currentNode) return;
-            if (confirm(`למחוק את ${currentNode.name}?`)) {
-                familyData.nodes = familyData.nodes.filter(n => n.id !== currentNode.id);
-                familyData.links = familyData.links.filter(l => {
-                    const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
-                    const targetId = typeof l.target === 'object' ? l.target.id : l.target;
-                    return sourceId !== currentNode.id && targetId !== currentNode.id;
-                });
-                resetFilter(); closeModal();
-            }
-        }
-
-        function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.3); }
-        function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 0.7); }
-        function resetZoom() { svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(window.innerWidth / 2, 50).scale(1)); }
-        
         function getCleanDataString() {
             const cleanData = {
                 nodes: familyData.nodes.map(n => ({ 
@@ -1102,8 +1540,49 @@
             return JSON.stringify(cleanData, null, 4);
         }
 
+        // --- STREAMING_CHUNK:File assembly... ---
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const viewModal = document.getElementById('view-modal');
+            const editModal = document.getElementById('action-modal');
+
+            viewModal.classList.remove('modal-enter-active');
+            editModal.classList.remove('modal-enter-active');
+            backdrop.classList.remove('backdrop-enter-active');
+
+            setTimeout(() => {
+                viewModal.classList.add('hidden');
+                editModal.classList.add('hidden');
+                backdrop.classList.add('hidden');
+                currentNode = null;
+            }, 300);
+        }
+
+        function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.3); }
+        function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 1 / 1.3); }
+        function resetZoom() {
+            const bounds = g.node().getBBox();
+            const parent = svg.node();
+            const fullWidth = parent.clientWidth || window.innerWidth;
+            const fullHeight = parent.clientHeight || window.innerHeight;
+            const width = bounds.width;
+            const height = bounds.height;
+            const midX = bounds.x + width / 2;
+            const midY = bounds.y + height / 2;
+
+            if (width === 0 || height === 0) return; 
+
+            const scale = Math.max(0.2, Math.min(1.2, 0.85 / Math.max(width / fullWidth, height / fullHeight)));
+            const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+
+            svg.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+            );
+        }
+
         function exportHTML() {
-            resetFilter(); // Clean filters before export
+            resetFilter(); 
             clearHighlights();
             d3.selectAll(".node-actions").style("opacity", 0).style("pointer-events", "none");
 
@@ -1121,7 +1600,6 @@
             
             let htmlContent = "<!DOCTYPE html>\n" + clone.outerHTML;
             
-            // Regex to inject the updated data safely
             const regex = /(let\s+familyData\s*=\s*)\{[\s\S]*?\};/;
             htmlContent = htmlContent.replace(regex, `$1${getCleanDataString()};`);
             
@@ -1136,6 +1614,5 @@
             URL.revokeObjectURL(url);
         }
     </script>
-
-
-</body></html>
+</body>
+</html>
